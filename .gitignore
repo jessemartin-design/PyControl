@@ -1,0 +1,23 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environments (per device)
+.venv/
+venv/
+
+# Local machine config (keep example committed)
+devices/*/config.json
+.env
+
+# Choreography runtime signals
+devices/*/signals/*
+!devices/*/signals/.gitkeep
+
+# OS / editor
+.DS_Store
+*.log
+
+# Do not ship built zips inside the working tree by default
+dist/*.zip

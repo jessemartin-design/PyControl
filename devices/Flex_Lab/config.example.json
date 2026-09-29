@@ -1,0 +1,14 @@
+{
+  "robot_ip": "10.14.19.180",
+  "robot_port": 31950,
+  "opentrons_version_header": "*",
+  "request_timeout_s": 30,
+  "poll_interval_s": 2.0,
+  "wifi_network": "optrn-nyc1-robotics",
+  "notes": {
+    "robot_name": "Chemelian",
+    "mac_address": "E8:FB:1C:AA:D7:61",
+    "subnet_mask": "255.255.255.0",
+    "security": "wpa-psk"
+  }
+}
