@@ -1,0 +1,10 @@
+{
+  "ftdi_device_id": "22040106",
+  "results_dir": "results",
+  "notes": {
+    "instrument": "BioTek Synergy H1",
+    "connection": "USB (FTDI VID 0x0403, PID 0x6001)",
+    "plate_resource": "Cor_Axy_96_wellplate_500uL_Ub",
+    "physical_plate": "Corning Axygen P-96-450V-C-S"
+  }
+}

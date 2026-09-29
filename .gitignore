@@ -15,6 +15,10 @@ devices/*/config.json
 devices/*/signals/*
 !devices/*/signals/.gitkeep
 
+# Instrument read results (machine-specific output)
+devices/*/results/*
+!devices/*/results/.gitkeep
+
 # OS / editor
 .DS_Store
 *.log

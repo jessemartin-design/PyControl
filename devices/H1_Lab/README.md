@@ -1,12 +1,14 @@
-# H1_Lab (placeholder)
+# H1_Lab (BioTek Synergy H1)
 
-This slot is reserved for the Biotek H1 control project.
+Device control package inside the shared **PyControl** tree: USB tray control, status, and absorbance reads for demos.
 
-**Do not invent a second PyControl tree.**  
-Upload repo-root [`ALIGNMENT_HANDOFF.md`](../../ALIGNMENT_HANDOFF.md) into the H1_Lab Cursor chat and instruct the agent to migrate the existing project (lab Mac path often `~/Documents/H1_Lab`) into:
+| Doc | Audience |
+| --- | --- |
+| [docs/SETUP.md](docs/SETUP.md) | Humans — install on Mac / Windows / Linux |
+| [docs/USER_GUIDE.md](docs/USER_GUIDE.md) | Humans — run CLI commands and the GUI |
+| [docs/AUTOMATION.md](docs/AUTOMATION.md) | Agents — automate setup from a terminal |
+| [HANDOFF.md](HANDOFF.md) | Agents — project status / durable facts |
 
-```text
-PyControl/devices/H1_Lab/
-```
+**Quick start:** run `scripts/setup_mac.sh`, `scripts/setup_linux.sh`, or `scripts/setup_windows.ps1`, then see the User Guide.
 
-Then run that device’s setup + guided verification checklist.
+Parent kit: `../../README.md` and `../../ALIGNMENT_HANDOFF.md`.
