@@ -11,9 +11,67 @@ This file standardizes structure, docs, setup automation, naming, and guided con
 1. Read this entire document before changing files.
 2. Ask the user only when a **decision gate** below requires it; otherwise automate.
 3. Prefer editing/moving into an **existing** `PyControl/` tree rather than inventing a second one.
-4. After changes: update the device `HANDOFF.md`, run the verification checklist with the user, and summarize what moved where.
+4. After changes: update that device’s **`<TAG>_HANDOFF.md`**, run the verification checklist with the user, and summarize what moved where.
 5. Do **not** create share zips unless the user asks (zips go stale if made too early).
 6. Do **not** add installer apps, Docker, or systemd services unless the user explicitly requests them.
+7. On every alignment or setup pass: ensure a **machine handoff** exists (see below); create/update it if missing.
+8. Scan **SETUP / USER-facing setup sections / AUTOMATION / this Alignment doc** for real OS usernames or hard-coded home paths. Fix those docs automatically. **Do not** scrub accurate historical paths or durable device facts out of `<TAG>_HANDOFF.md` files.
+
+---
+
+## Privacy & path conventions (read carefully)
+
+| Document type | Real OS username (`jesse…` style)? | Site robot name / serial / IP? |
+| --- | --- | --- |
+| `docs/SETUP.md`, `docs/AUTOMATION.md`, `ALIGNMENT_HANDOFF.md`, `templates/*` | **No** — use `~/…`, `%USERPROFILE%\…`, or `/Users/<username>/…` | **Generalize** — use placeholders; point to device or machine handoff for live values |
+| `<TAG>_HANDOFF.md` (e.g. `FLEX_HANDOFF.md`) | **Allowed when accuracy requires it** (undo/backup paths). Prefer `~/…` when equivalent | **Keep** — Chemelian, serials, IPs, Wi‑Fi SSIDs belong here |
+| `machines/<HOST>_HANDOFF.md` | **Yes — this is the place** for operator name, git identity, host IP | Optional pointers to which devices this PC drives |
+
+**Accuracy over scrubbing:** If a redirect/undo instruction only works with the real absolute path, keep that path in the **device handoff**. Do not invent scrubbed paths that break recovery steps.
+
+**Alignment check (automatic):** When aligning any project, search its SETUP/AUTOMATION (and Alignment copies) for `/Users/<realname>` or `C:\Users\<realname>`. Replace with `~/` / `%USERPROFILE%` / `<username>` placeholders. If nothing to fix, move on. Leave `<TAG>_HANDOFF.md` historical sections intact unless the user asks to edit them.
+
+---
+
+## Machine handoff (per computer — required)
+
+Shared facts that apply to **all devices on one PC** live in:
+
+```text
+PyControl/machines/<HOSTNAME>_HANDOFF.md
+```
+
+Example template (committed): `machines/MACHINE_HANDOFF.example.md`  
+Real machine files are **gitignored** so USB/zip shares do not leak identity.
+
+### Strategy (why this is a good idea)
+
+- Agents cannot rely on chat memory across projects; a file on disk is the durable “memory.”
+- Separates **person/computer** facts from **device** facts (Flex vs H1 vs MiR).
+- Gitignored machine files keep personal email/IP out of shared zips; the example file teaches the shape.
+
+### What to store
+
+| Field | Notes |
+| --- | --- |
+| Operator display name | Human using this PC |
+| Git `user.name` / `user.email` | From user prompt; also applied via `git config` when user agrees |
+| Computer name / hostname | For the filename and docs |
+| Last-known LAN IP | Volatile — refresh when networking changes |
+| Preferred `PyControl` path | e.g. `~/Documents/PyControl` or `~/PyControl` |
+| OS | macOS / Windows / Linux |
+| Notes | Lab Wi‑Fi names, etc., if useful across devices |
+
+### Agent procedure (setup / automation / alignment)
+
+1. Detect hostname (`scutil --get ComputerName` / `hostname` / Windows `hostname`).
+2. If `machines/<HOSTNAME>_HANDOFF.md` is missing, **ask the user** for the fields above (especially git name + email).
+3. Create the file from the example template; do not commit it.
+4. With user permission, set git identity for commits on this machine:
+   - `git config --global user.name "…"`
+   - `git config --global user.email "…"`
+5. On later setups, **read** the machine handoff first; only ask again if fields are blank or the user wants updates.
+6. If the preferred PyControl folder is missing, **ask** to create `~/PyControl` or choose another path — do not invent a username-specific absolute path in SETUP/AUTOMATION text.
 
 ---
 
@@ -23,45 +81,62 @@ This file standardizes structure, docs, setup automation, naming, and guided con
 PyControl/
   README.md
   ALIGNMENT_HANDOFF.md
+  machines/
+    MACHINE_HANDOFF.example.md
+    <HOSTNAME>_HANDOFF.md      ← local only (gitignored)
   templates/
     SETUP.md
     USER_GUIDE.md
     AUTOMATION.md
-    HANDOFF.md
+    DEVICE_HANDOFF.md
     README.md
   devices/
-    Flex_Lab/     # Opentrons Flex
-    MiR_API/      # MiR robot
-    H1_Lab/       # Biotek H1
-    <NewDevice>/  # future
+    Flex_Lab/FLEX_HANDOFF.md
+    MiR_API/MIR_HANDOFF.md
+    H1_Lab/H1_HANDOFF.md
 ```
 
-### Preferred machine paths
+### Preferred machine paths (generic docs)
 
 | OS | PyControl root |
 | --- | --- |
-| Mac / Linux | `~/PyControl` |
+| Mac / Linux | `~/PyControl` (or path recorded in the machine handoff) |
 | Windows | `%USERPROFILE%\PyControl` |
 
-**Development note (this lab Mac):** a working tree may live at `~/Documents/PyControl` after renaming the old `Flex_Lab` repo. That is fine. New USB installs should still target `~/PyControl` unless the user chooses otherwise.
+### Path rule (code + generic docs)
 
-### Path rule
+- Resolve device root from the folder that contains the CLI + `config.example.json`.
+- Never hard-code a real home path in **scripts** or **SETUP/AUTOMATION**.
+- Setup scripts compute `DEVICE_DIR` from their own location (zip/USB safe).
 
-- Resolve the device root as the folder that contains the device’s main CLI module + `config.example.json` (or equivalent).
-- Never hard-code another user’s home path in scripts.
-- Setup scripts must compute `DEVICE_DIR` from the script location so zip/USB paths work.
+---
+
+## Device handoff naming convention (required)
+
+| Device folder | Handoff filename | Tag |
+| --- | --- | --- |
+| `Flex_Lab` | `FLEX_HANDOFF.md` | `FLEX` |
+| `MiR_API` | `MIR_HANDOFF.md` | `MIR` |
+| `H1_Lab` | `H1_HANDOFF.md` | `H1` |
+| Future device | `<TAG>_HANDOFF.md` | Agree short uppercase tag with user |
+
+1. Repo-root alignment kit stays **`ALIGNMENT_HANDOFF.md`**.
+2. Each device owns **exactly one** `<TAG>_HANDOFF.md` at the device root.
+3. Rename legacy `HANDOFF.md` → `<TAG>_HANDOFF.md` and fix links.
+4. Title like `# FLEX_HANDOFF — Opentrons Flex`.
+5. Sibling tables list other devices’ **folder + handoff filename**.
 
 ---
 
 ## Known projects to align
 
-| Device folder name | Role | Known prior location (lab Mac) |
-| --- | --- | --- |
-| `Flex_Lab` | Opentrons Flex | Was `Documents/Flex_Lab` → should already be `PyControl/devices/Flex_Lab` |
-| `MiR_API` | MiR API control | `Desktop/MiR_API` |
-| `H1_Lab` | Biotek H1 control | `Documents/H1_Lab` |
+| Device folder | Role | Typical prior location (examples) | Handoff |
+| --- | --- | --- | --- |
+| `Flex_Lab` | Opentrons Flex | `PyControl/devices/Flex_Lab` | `FLEX_HANDOFF.md` |
+| `MiR_API` | MiR API control | `~/Desktop/MiR_API` | `MIR_HANDOFF.md` |
+| `H1_Lab` | Biotek H1 | See `H1_HANDOFF.md` for backup/undo paths | `H1_HANDOFF.md` |
 
-When aligning MiR or H1: **migrate into the existing PyControl** that already contains Flex_Lab, if present.
+Prefer one PyControl tree; add device folders into it.
 
 ---
 
@@ -69,173 +144,110 @@ When aligning MiR or H1: **migrate into the existing PyControl** that already co
 
 | Gate | Question | Default if user defers |
 | --- | --- | --- |
-| PyControl missing | “Create `~/PyControl` (or Windows equivalent) and place this device under `devices/<Name>/`?” | Wait for yes/no — **do not create without permission** |
-| Two PyControl copies | “Which tree is canonical? Merge into that one.” | Prefer the one that already has `devices/Flex_Lab` |
-| Device IP / host | Manual entry vs auto-discover (if supported) | **Manual** with value from existing config |
-| Destructive moves | Confirm before deleting the old project folder | Leave old folder until user confirms delete |
-| Motion / wet tests | Confirm before commands that move robots or run assays | Ping/status only until approved |
+| PyControl missing | Create preferred path from machine handoff / `~/PyControl`? | Wait for yes/no |
+| Two PyControl copies | Which tree is canonical? | Prefer one with `devices/Flex_Lab` |
+| Machine handoff missing | Collect operator + git identity + host fields? | Required before finishing setup |
+| Device IP / host | Manual vs discover | **Manual** default |
+| Destructive moves | Confirm before deleting backups | Leave until explicit yes |
+| Motion / wet tests | Confirm before physical actions | Health checks only until approved |
 
 ---
 
 ## Naming & rename checklist
 
-When bringing a project into PyControl, the **device directory name** must match the table above (`MiR_API`, `H1_Lab`, `Flex_Lab`, or an agreed new name).
-
-### Required renames / reference updates
-
-Update every user-facing and agent-facing reference that still points at the old standalone root:
-
 | Area | What to change |
 | --- | --- |
-| Folder | Final path `PyControl/devices/<DeviceName>/` |
-| README titles | Say `PyControl / devices / <DeviceName>` |
-| Docs examples | `cd` examples use `$HOME/PyControl/devices/<DeviceName>` or `%USERPROFILE%\PyControl\devices\<DeviceName>` |
-| Setup scripts | Live under `devices/<DeviceName>/scripts/`; derive paths from script location |
-| Config | Commit `config.example.json`; keep local `config.json` machine-specific |
-| Automation brief | Path rule = directory containing the main CLI entry file |
-| Handoff | List sibling devices; link to repo-root `ALIGNMENT_HANDOFF.md` |
-| Imports / packaging | If code assumed repo root == device root, fix relative paths |
-| Old name strings | Search for old folder names (`Flex_Lab` repo root assumptions, `MiR_API` desktop paths, etc.) and replace in docs/scripts |
+| Folder | `PyControl/devices/<DeviceName>/` |
+| Docs examples | `~/PyControl/devices/<DeviceName>` or `%USERPROFILE%\…` |
+| Setup scripts | Under `scripts/`; path from script location |
+| Config | `config.example.json` committed; `config.json` local |
+| Device handoff | `<TAG>_HANDOFF.md` with **real** device durable facts |
+| SETUP/AUTOMATION | Placeholders only for usernames and live robot IDs |
+| Machine handoff | Ensure `machines/<HOST>_HANDOFF.md` exists |
 
-### Creating a new device name
+### Creating a new device
 
-1. Agree on `Pascal_or_Snake` folder name with the user (e.g. `MiR_API`).
-2. Copy `templates/` into `devices/<NewName>/docs/` (and device README/HANDOFF).
-3. Replace placeholders `__DEVICE_NAME__`, `__CLI_MODULE__`, `__PING_COMMAND__`, `__WIFI_OR_NETWORK__`, `__DEFAULT_HOST__`.
+1. Agree folder name + **TAG**.
+2. Copy templates; write `<TAG>_HANDOFF.md` from `DEVICE_HANDOFF.md`.
+3. Replace placeholders (`__DEVICE_NAME__`, `__DEVICE_TAG__`, etc.).
 
 ---
 
 ## Required deliverables per device
 
-Mirror **Flex_Lab** unless a difference is justified in that device’s HANDOFF:
-
 | Item | Intent |
 | --- | --- |
-| Main CLI module | e.g. `flex_control.py`, `mir_command.py`, `h1_control.py` |
-| `requirements.txt` | Minimal deps |
-| `config.example.json` | Safe committed defaults |
-| `config.json` | Local (optional gitignore) |
-| `docs/SETUP.md` | Mac + Windows + Linux; troubleshooting **tables** |
-| `docs/USER_GUIDE.md` | Activate venv + command cheat sheet |
-| `docs/AUTOMATION.md` | Agent brief: paths, permission to create folders, verify |
-| `HANDOFF.md` | Objectives, progress, durable facts, update rules |
-| `README.md` | Short index linking the docs |
-| `scripts/setup_mac.sh` | Idempotent |
-| `scripts/setup_linux.sh` | Idempotent |
-| `scripts/setup_windows.ps1` | Idempotent |
-| Signals or equivalent | Only if choreography needs them |
+| Main CLI + `requirements.txt` | Lean control layer |
+| `config.example.json` / local `config.json` | Defaults vs machine |
+| `docs/SETUP.md` | OS install; **tables**; no real usernames; robot IDs as placeholders + “see device handoff” |
+| `docs/USER_GUIDE.md` | Everyday commands (may reference this lab’s devices) |
+| `docs/AUTOMATION.md` | Agent brief; machine handoff + folder permission gates |
+| `<TAG>_HANDOFF.md` | Durable device facts (names, serials, IPs, undo paths) |
+| `scripts/setup_*.sh` / `.ps1` | Idempotent |
 
-### Setup script behavior (all OS)
+### Setup script behavior
 
 1. Resolve `DEVICE_DIR` from script path.
-2. Require Python **3.9+** (prefer 3.9–3.12 when choosing a binary).
-3. Create `.venv` if missing; reuse if present.
-4. `pip install -r requirements.txt`.
-5. Ensure config from example.
-6. Prompt (or flags) for **manual host/IP** vs **discover** when the device supports discovery; default manual.
-7. Run the device ping/health command; print clear `SETUP OK` / failure.
+2. Python 3.9+.
+3. Reuse or create `.venv`; `pip install -r requirements.txt`.
+4. Ensure config from example.
+5. Manual host/IP by default; optional discover.
+6. Ping/health → `SETUP OK` / failure.
+7. (Agent-driven setups) ensure machine handoff + git identity per sections above.
 
-Support non-interactive flags analogous to Flex:
-
-- `--non-interactive --ip <addr>` / `-NonInteractive -Ip <addr>`
-- optional `--discover` / `-Discover`
-
-### Docs behavior
-
-- Setup & User troubleshooting sections use **markdown tables**.
-- Do not require launching vendor GUIs for CLI setup (optional appendix only).
-- Success gate is one obvious health command (Flex: `ping` → `ping_ok`).
+Flags: `--non-interactive --ip …`, optional `--discover`.
 
 ---
 
-## Migration procedure (MiR_API / H1_Lab / future)
+## Migration procedure
 
-### A. Find PyControl
+### A–F (summary)
 
-1. Search common locations: `~/PyControl`, `~/Documents/PyControl`, workspace parent folders.
-2. If found and contains `devices/Flex_Lab`, treat it as canonical.
-3. If not found → **ask permission** to create `~/PyControl` and copy `ALIGNMENT_HANDOFF.md`, `README.md`, and `templates/` from the Flex-based kit (or recreate from this spec).
+Find/create PyControl (ask permission) → create `devices/<Name>/` → move code (no `.venv`) → align docs/scripts/`<TAG>_HANDOFF.md` → scrub SETUP/AUTOMATION usernames if needed → ensure machine handoff → guided verify → mark Progress in device handoff.
 
-### B. Create device slot
-
-```text
-PyControl/devices/MiR_API/   # or H1_Lab
-```
-
-### C. Move code
-
-1. Copy/move source, requirements, existing docs into the device slot.
-2. Do not copy `.venv` (recreate with setup script).
-3. Keep git history when possible (user decision): either move the whole repo to become PyControl, or add device files into the existing PyControl git root and retire the old repo later.
-
-### D. Align structure
-
-1. Add missing docs/scripts using `templates/` + Flex_Lab as the reference implementation.
-2. Apply rename checklist.
-3. Implement host/IP prompt pattern appropriate to that API.
-4. Update device `HANDOFF.md` with durable network/device facts from the old project.
-
-### E. Guided verification (do this with the user)
-
-1. Network/Wi‑Fi connected as required by that device.
-2. Run setup script for the OS.
-3. Health/ping command succeeds.
-4. One read-only status command succeeds.
-5. **Ask** before any motion, navigation, aspirate, or plate read that changes the physical world.
-6. Mark Progress in `HANDOFF.md`.
-
-### F. After all three devices pass
-
-User will zip `PyControl` (excluding `.venv` folders) for USB share. Agents may list exclude patterns but should not zip unless asked.
+Retired copies: rename to `<Folder>_backup_<YYYYMMDD>` (never delete during migration). Record accurate undo paths in **device** handoff.
 
 ---
 
-## Flex_Lab reference commands
+## Flex reference (generic automation wording)
 
 ```bash
-cd "$HOME/PyControl/devices/Flex_Lab"   # or Documents/PyControl/...
+cd "$HOME/PyControl/devices/Flex_Lab"   # or path from machines/<HOST>_HANDOFF.md
 source .venv/bin/activate
 python flex_control.py ping
 python flex_control.py status
 ```
 
-Setup:
-
-```bash
-./scripts/setup_mac.sh
-./scripts/setup_linux.sh
-# Windows: .\scripts\setup_windows.ps1
-```
+Expect `ping_ok`. Confirm robot **name / IP** against `devices/Flex_Lab/FLEX_HANDOFF.md` (not hard-coded in this Alignment file).
 
 ---
 
 ## Template placeholders
 
-When copying from `templates/`, replace:
-
 | Placeholder | Example |
 | --- | --- |
 | `__DEVICE_NAME__` | `MiR_API` |
+| `__DEVICE_TAG__` | `MIR` |
 | `__CLI_MODULE__` | `mir_command.py` |
 | `__PING_COMMAND__` | `python mir_command.py status` |
-| `__WIFI_OR_NETWORK__` | device network name |
-| `__DEFAULT_HOST__` | IP or hostname |
-| `__SETUP_SCRIPT_MAC__` | `scripts/setup_mac.sh` |
+| `__WIFI_OR_NETWORK__` | (see device handoff) |
+| `__DEFAULT_HOST__` | (see device handoff / config.example) |
+| `__DEVICE_HANDOFF_FILE__` | `MIR_HANDOFF.md` |
 
 ---
 
 ## What “done” means for an alignment pass
 
-- [ ] Device lives at `PyControl/devices/<DeviceName>/`
-- [ ] Setup scripts exist and are idempotent
-- [ ] SETUP / USER_GUIDE / AUTOMATION / HANDOFF present and path-correct
-- [ ] Config example committed; local config works
-- [ ] User completed guided verification (ping/status at minimum)
-- [ ] Device HANDOFF Progress updated
-- [ ] No second competing PyControl tree left unexplained
+- [ ] Device at `PyControl/devices/<DeviceName>/`
+- [ ] Setup scripts idempotent
+- [ ] SETUP / USER_GUIDE / AUTOMATION path-correct; SETUP/AUTOMATION free of real usernames
+- [ ] `<TAG>_HANDOFF.md` present with durable device facts
+- [ ] `machines/<HOSTNAME>_HANDOFF.md` present (gitignored) with git identity
+- [ ] Guided verification done
+- [ ] Progress updated in device handoff
 
 ---
 
 ## Maintenance
 
-Any agent that changes the shared pattern (layout, script flags, doc set) must update **this** `ALIGNMENT_HANDOFF.md` and the Flex reference implementation so MiR/H1 stays consistent.
+Update **this** file when the shared pattern changes (including machine-handoff or privacy rules). Keep Flex `docs/SETUP.md` / `docs/AUTOMATION.md` as the reference implementation for generic wording.

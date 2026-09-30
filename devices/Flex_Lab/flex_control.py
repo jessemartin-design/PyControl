@@ -313,20 +313,95 @@ class FlexClient:
         run_id: str,
         *,
         timeout_s: Optional[float] = None,
+        interactive: bool = True,
     ) -> dict[str, Any]:
+        """
+        Poll until the run finishes.
+
+        When interactive=True (default for human terminals):
+        - If the Flex pauses (e.g. protocol note / Confirm & resume), prompt to
+          resume via API play, keep waiting, or stop the run.
+        - Ctrl+C asks whether to stop the Flex run as well (terminal cancel alone
+          does not stop the robot).
+        """
         started = time.time()
+        last_status: Optional[str] = None
+        pause_prompt_pending = True
+
         while True:
-            run = self.get_run(run_id)
-            status = run.get("status")
-            emit_event("run_status", run_id=run_id, status=status)
-            if status in TERMINAL_STATUSES:
-                return run
-            if timeout_s is not None and (time.time() - started) > timeout_s:
-                raise FlexError(
-                    f"Timed out after {timeout_s}s waiting for run {run_id} "
-                    f"(last status: {status})"
-                )
-            time.sleep(self.poll_interval_s)
+            try:
+                run = self.get_run(run_id)
+                status = run.get("status")
+                if status != last_status:
+                    emit_event("run_status", run_id=run_id, status=status)
+                    last_status = status
+                    if status == "paused":
+                        pause_prompt_pending = True
+
+                if status in TERMINAL_STATUSES:
+                    return run
+
+                if (
+                    status == "paused"
+                    and interactive
+                    and pause_prompt_pending
+                    and sys.stdin.isatty()
+                ):
+                    emit_event(
+                        "run_paused_prompt",
+                        run_id=run_id,
+                        hint="Protocol may be waiting for Confirm & resume",
+                    )
+                    print(
+                        "\nFlex run is PAUSED "
+                        "(often a note / Confirm & resume step).\n"
+                        "  y = resume from this terminal (same as Confirm & resume)\n"
+                        "  n = keep waiting (you can still use the touchscreen)\n"
+                        "  s = stop the run on the Flex\n",
+                        file=sys.stderr,
+                        flush=True,
+                    )
+                    choice = input("Resume paused Flex run? [y/n/s]: ").strip().lower()
+                    if choice in {"y", "yes"}:
+                        self.play(run_id)
+                        emit_event("run_resumed", run_id=run_id, via="terminal")
+                        pause_prompt_pending = False
+                    elif choice in {"s", "stop"}:
+                        self.stop(run_id)
+                        emit_event("run_stop", run_id=run_id, via="terminal_pause_prompt")
+                        pause_prompt_pending = False
+                    else:
+                        # User will use touchscreen or decide later; don't spam.
+                        pause_prompt_pending = False
+                        emit_event("run_pause_deferred", run_id=run_id)
+
+                if timeout_s is not None and (time.time() - started) > timeout_s:
+                    raise FlexError(
+                        f"Timed out after {timeout_s}s waiting for run {run_id} "
+                        f"(last status: {status})"
+                    )
+                time.sleep(self.poll_interval_s)
+            except KeyboardInterrupt:
+                if interactive and sys.stdin.isatty():
+                    print(
+                        "\nTerminal canceled. The Flex may still be running.",
+                        file=sys.stderr,
+                        flush=True,
+                    )
+                    stop_choice = input(
+                        f"Also STOP run {run_id} on the Flex? [y/N]: "
+                    ).strip().lower()
+                    if stop_choice in {"y", "yes"}:
+                        try:
+                            self.stop(run_id)
+                            emit_event(
+                                "run_stop",
+                                run_id=run_id,
+                                via="terminal_keyboard_interrupt",
+                            )
+                        except FlexError as exc:
+                            emit_event("error", message=str(exc))
+                raise
 
     def run_protocol(
         self,
@@ -335,6 +410,7 @@ class FlexClient:
         params: Optional[dict[str, Any]] = None,
         wait: bool = True,
         timeout_s: Optional[float] = None,
+        interactive: bool = True,
     ) -> dict[str, Any]:
         protocol = self.find_protocol(name_or_id)
         protocol_id = protocol["id"]
@@ -354,7 +430,13 @@ class FlexClient:
         if not wait:
             return run
 
-        final = self.wait_for_run(run_id, timeout_s=timeout_s)
+        try:
+            final = self.wait_for_run(
+                run_id, timeout_s=timeout_s, interactive=interactive
+            )
+        except KeyboardInterrupt:
+            emit_event("interrupted", run_id=run_id)
+            raise
         emit_event(
             "run_finished",
             run_id=run_id,
@@ -492,6 +574,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Return immediately after play (do not wait for completion)",
     )
     run.add_argument("--timeout", type=float, default=None, help="Seconds to wait")
+    run.add_argument(
+        "--no-prompt",
+        action="store_true",
+        help="Do not ask about pause resume / Ctrl+C stop (for automation)",
+    )
 
     play = sub.add_parser("play", help="Play / resume a run")
     play.add_argument("run_id")
@@ -505,6 +592,11 @@ def build_parser() -> argparse.ArgumentParser:
     wait = sub.add_parser("wait", help="Poll a run until it finishes")
     wait.add_argument("run_id")
     wait.add_argument("--timeout", type=float, default=None)
+    wait.add_argument(
+        "--no-prompt",
+        action="store_true",
+        help="Do not ask about pause resume / Ctrl+C stop",
+    )
 
     transfer = sub.add_parser(
         "transfer",
@@ -517,6 +609,11 @@ def build_parser() -> argparse.ArgumentParser:
     transfer.add_argument("--volume", type=float, default=10.0, help="Volume in uL")
     transfer.add_argument("--no-wait", action="store_true")
     transfer.add_argument("--timeout", type=float, default=None)
+    transfer.add_argument(
+        "--no-prompt",
+        action="store_true",
+        help="Do not ask about pause resume / Ctrl+C stop (for automation)",
+    )
     transfer.add_argument(
         "--protocol-file",
         default=str(ROOT / "protocols" / "demo_transfer.py"),
@@ -659,12 +756,16 @@ def cmd_upload(client: FlexClient, args: argparse.Namespace) -> int:
 
 def cmd_run(client: FlexClient, args: argparse.Namespace) -> int:
     params = parse_params(args.param)
-    result = client.run_protocol(
-        args.protocol,
-        params=params or None,
-        wait=not args.no_wait,
-        timeout_s=args.timeout,
-    )
+    try:
+        result = client.run_protocol(
+            args.protocol,
+            params=params or None,
+            wait=not args.no_wait,
+            timeout_s=args.timeout,
+            interactive=not args.no_prompt,
+        )
+    except KeyboardInterrupt:
+        return 130
     if args.no_wait:
         emit_event("run_queued", run_id=result.get("id"), status=result.get("status"))
     return 0 if result.get("status") in {None, "idle", "running", "succeeded"} or args.no_wait else 1
@@ -689,7 +790,14 @@ def cmd_stop(client: FlexClient, args: argparse.Namespace) -> int:
 
 
 def cmd_wait(client: FlexClient, args: argparse.Namespace) -> int:
-    final = client.wait_for_run(args.run_id, timeout_s=args.timeout)
+    try:
+        final = client.wait_for_run(
+            args.run_id,
+            timeout_s=args.timeout,
+            interactive=not args.no_prompt,
+        )
+    except KeyboardInterrupt:
+        return 130
     ok = final.get("status") == "succeeded"
     emit_event("run_finished", run_id=args.run_id, status=final.get("status"), ok=ok)
     return 0 if ok else 1
@@ -721,12 +829,16 @@ def cmd_transfer(client: FlexClient, args: argparse.Namespace) -> int:
         "volume_ul": args.volume,
     }
     emit_event("transfer_requested", **params)
-    result = client.run_protocol(
-        protocol_id,
-        params=params,
-        wait=not args.no_wait,
-        timeout_s=args.timeout,
-    )
+    try:
+        result = client.run_protocol(
+            protocol_id,
+            params=params,
+            wait=not args.no_wait,
+            timeout_s=args.timeout,
+            interactive=not args.no_prompt,
+        )
+    except KeyboardInterrupt:
+        return 130
     if args.no_wait:
         return 0
     return 0 if result.get("status") == "succeeded" else 1

@@ -25,3 +25,7 @@ devices/*/results/*
 
 # Do not ship built zips inside the working tree by default
 dist/*.zip
+
+# Per-computer operator / git / path facts (keep example only)
+machines/*_HANDOFF.md
+!machines/MACHINE_HANDOFF.example.md

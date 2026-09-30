@@ -5,11 +5,17 @@ Upload this file so an agent can set up `__DEVICE_NAME__` from a terminal.
 ## Path rule
 
 Device root = directory containing `__CLI_MODULE__` and `config.example.json`.  
-Never hard-code a single user’s home path. Prefer `~/PyControl/devices/__DEVICE_NAME__`.
+Never hard-code a real OS username. Prefer `~/PyControl/devices/__DEVICE_NAME__` or the path in `machines/<HOSTNAME>_HANDOFF.md`.
 
-## Permission gate
+## Privacy scan
 
-If `PyControl` is missing, **ask** before creating `~/PyControl` (or Windows equivalent).
+Fix real `/Users/<person>` paths in SETUP/AUTOMATION only.  
+Do **not** scrub accurate historical paths in `__DEVICE_HANDOFF_FILE__`.
+
+## Permission gates
+
+- Ask before creating `~/PyControl` (or machine-handoff path).
+- Ensure `machines/<HOSTNAME>_HANDOFF.md` exists; collect git identity; apply `git config` with permission.
 
 ## Setup
 
@@ -19,12 +25,12 @@ If `PyControl` is missing, **ask** before creating `~/PyControl` (or Windows equ
 | Linux | `scripts/setup_linux.sh` |
 | Windows | `scripts/setup_windows.ps1` |
 
-Prefer non-interactive with an explicit host when automating. Default host selection is **manual**, not discover.
+Host/IDs: read `__DEVICE_HANDOFF_FILE__` / config — do not hard-code lab-specific values in this brief.
 
 ## Verify with the user
 
 1. `__PING_COMMAND__`
-2. One read-only status command
+2. Compare identity fields to `__DEVICE_HANDOFF_FILE__`
 3. Ask before any motion / wet / destructive action
 
 ## Shared process

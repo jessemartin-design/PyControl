@@ -1,7 +1,9 @@
-# H1_Lab — Agent Handoff
+# H1_HANDOFF — BioTek Synergy H1
 
 Living device brief for the **BioTek Synergy H1** under the shared **PyControl** layout.  
 **Update this file whenever objectives, progress, or durable facts change.**
+
+Filename convention: device handoffs are `<TAG>_HANDOFF.md` (this file = `H1_HANDOFF.md`). See repo-root `ALIGNMENT_HANDOFF.md`.
 
 ---
 
@@ -19,7 +21,7 @@ Living device brief for the **BioTek Synergy H1** under the shared **PyControl**
 
 ## Last updated
 
-2026-09-29 — Migrated into `PyControl/devices/H1_Lab`; setup scripts, docs, `config.json`, `results/`, `discover` added. User ran `setup_mac.sh` → `SETUP OK`; old-path pointers updated.
+2026-09-30 — Renamed `HANDOFF.md` → `H1_HANDOFF.md` per PyControl naming convention (Flex alignment pass). Old `~/Documents/H1_Lab` renamed to `~/Documents/H1_Lab_backup_20260929`; references repointed. **H1 migration complete.** Longevity pass: removed `PAI_Lab` H1 redirect stubs; replaced real usernames with `~` / `<username>`; standardized undo steps; added backup-deletion checklist and smoke test.
 
 ---
 
@@ -52,8 +54,14 @@ Multi-device hub/gateway (lives in `PAI_Lab`), public-internet control, research
 | Done | Repointed `PAI_Lab` stubs/docs, `MiR_API/docs/PROJECT_KNOWLEDGE.md`, PyControl README, Flex HANDOFF |
 | Done | Git ignore verified: `config.json` and `.venv` excluded (`git check-ignore`) |
 | Done | Tray `open` → `close` from new path (user-verified 2026-09-29) |
-| Pending | Git commit after tray test (user approved; nothing committed yet) |
-| Decided | Old `~/Documents/H1_Lab` kept as backup |
+| Done | Git commit `449ab4f` (H1_Lab + root README/.gitignore; Flex files left for Flex chat) |
+| Done | Device handoff renamed to `H1_HANDOFF.md` |
+| Done | Old `~/Documents/H1_Lab` renamed to `~/Documents/H1_Lab_backup_20260929` (kept as backup; nothing deleted) |
+| Done | Cursor workspace for this work moved to `~/Documents/PyControl` |
+| Done | Deleted `PAI_Lab` redirect stubs (`h1_control.py`, `h1_gui.py`, `h1_absorbance_test.py`, `PAI_Lab_Cursor_PyLabRobot_Handoff_concise_v3.md`) — 2026-09-30 |
+| Done | Real usernames removed from H1/PyControl/PAI_Lab/backup text docs (`~` / `<username>` convention) |
+| Pending | User re-runs **Smoke test** below after the 2026-09-30 cleanup |
+| Pending | GUI smoke from new path (optional; worked pre-migration) |
 | Pending | Windows / Linux hardware verification |
 | Deferred | `pai_signal` emit from CLI/GUI ("demo contract") |
 
@@ -62,14 +70,39 @@ Multi-device hub/gateway (lives in `PAI_Lab`), public-internet control, research
 User decisions (2026-09-29):
 
 1. **Tray test** — yes: guided `open` → `close` from the new path (no GUI). **Passed.**
-2. **Git commit** — yes, **after** the tray test passes (PyControl root; `config.json` / `.venv` excluded).
-3. **Old `~/Documents/H1_Lab`** — **keep as backup** for now (only copy of `.docx` guides, `h1_absorbance_test.py`, old results). Do not delete without explicit confirmation.
+2. **Git commit** — done as `449ab4f` after the tray test. Uncommitted Flex changes were intentionally left for the Flex chat to commit.
+3. **Old `~/Documents/H1_Lab`** — kept as backup, renamed `~/Documents/H1_Lab_backup_20260929` (matches `PAI_Lab_backup_20260908`). Only copy of `.docx` guides, `h1_absorbance_test.py`, old results. Do not delete without explicit confirmation.
+
+Remaining: user runs the **Smoke test** below; optional GUI smoke; Windows/Linux verification; `pai_signal` when requested. MiR_API alignment happens in its own chat (its docs still contain a real username; the MiR agent should apply the no-username rule from `ALIGNMENT_HANDOFF.md`).
 
 Session notes:
 
-- `PAI_Lab/h1_absorbance_test.py` stub intentionally still points to old `~/Documents/H1_Lab` (script not migrated).
-- Edited `PAI_Lab/h1_control.py` / `h1_gui.py` stubs were not executed (auto-review blocks running scripts outside the active workspace); they only print a redirect and exit 2.
-- Current Cursor workspace is still the old `~/Documents/H1_Lab`, so commands touching `PyControl`/`PAI_Lab` may trigger approval prompts.
+- `PAI_Lab` no longer has any H1 redirect stubs (removed 2026-09-30; `PAI_Lab` is not a git repo, so they are not recoverable — they only printed a "moved" message). Stale H1 result files `PAI_Lab/h1_absorbance_600nm_result.*` remain (not redirects; left as-is).
+- Git commit metadata (author name/email) still contains the real name; that is standard Git behavior and was not rewritten.
+- Backup `.docx` guides were not edited (binary; superseded by `docs/*.md`).
+- Backup's `.venv` may not work at the renamed path (venvs store their absolute path). See **Undo** below.
+
+---
+
+## Smoke test (run after any change to code, paths, or setup)
+
+Run from the device folder with `.venv` active. Steps 1–2 are agent-safe; step 3 needs the H1; step 4 moves hardware (**ask first**).
+
+```bash
+cd /path/to/PyControl/devices/H1_Lab
+source .venv/bin/activate   # Windows: .\.venv\Scripts\Activate.ps1
+```
+
+| Step | Command | Pass looks like | Moves? |
+| --- | --- | --- | --- |
+| 1. Code loads | `python -m py_compile h1_control.py h1_gui.py && python h1_control.py --help` | No errors; usage text lists `open, close, cycle, status, absorbance, discover` | No |
+| 2. Scripts parse (Mac/Linux) | `bash -n scripts/setup_mac.sh && bash -n scripts/setup_linux.sh` | No output | No |
+| 3a. USB visible | `python h1_control.py discover` | Lists a device ending `:22040106` | No |
+| 3b. Instrument talks | `python h1_control.py status` | `Connected to Synergy H1.` / `Serial: 22040106` | No |
+| 4. Tray | `python h1_control.py open` then `python h1_control.py close` | `Tray opened.` then `Tray closed.` | **Yes** |
+
+Optional: `python h1_gui.py` → click **Status**. Full re-setup check: `./scripts/setup_mac.sh --non-interactive` → `SETUP OK`.  
+Log the result (date + pass/fail) in **Progress**.
 
 ---
 
@@ -109,7 +142,7 @@ Session notes:
 | `results/` | Absorbance output (gitignored except `.gitkeep`) |
 | `docs/` | Setup, User, Automation |
 | `scripts/` | OS setup entrypoints |
-| `HANDOFF.md` | This file |
+| `H1_HANDOFF.md` | This file |
 
 ### Architecture (confirmed 2026-09-14)
 
@@ -127,27 +160,52 @@ Control from: the always-on USB computer; same LAN via RDP into it; remote colle
 | --- | --- |
 | 2026-09-14 | H1 code/docs split out of `PAI_Lab` into `~/Documents/H1_Lab`; schema prefix `pai_lab.h1.*` → `h1_lab.*` |
 | 2026-09-29 | Copied into `PyControl/devices/H1_Lab`; `.env` → `config.json`; outputs → `results/`; `requests` dropped from requirements; old docs replaced by `docs/SETUP.md` / `USER_GUIDE.md` / `AUTOMATION.md` |
+| 2026-09-30 | `HANDOFF.md` → `H1_HANDOFF.md` |
+| 2026-09-30 | Old `~/Documents/H1_Lab` → `~/Documents/H1_Lab_backup_20260929` |
+| 2026-09-30 | `PAI_Lab` H1 redirect stubs deleted; usernames → `~` / `<username>` in docs |
 
-Not copied (still in old folder): `.docx` guides, `h1_absorbance_test.py`, old result files, `H1_autosetup.md`, old handoff.
+Not copied (only in `~/Documents/H1_Lab_backup_20260929`): `.docx` guides, `h1_absorbance_test.py`, old result files, `H1_autosetup.md`, old handoff.
 
 **If something breaks after the move:**
 
-1. `cwd` is `PyControl/devices/H1_Lab`, not `~/Documents/H1_Lab` or `PAI_Lab`.
+1. `cwd` is `PyControl/devices/H1_Lab`, not the backup folder or `PAI_Lab`.
 2. Use this folder's `.venv` (re-run the setup script to rebuild it).
 3. Missing serial? `config.json` exists but lacks `ftdi_device_id` → `.env` is ignored once `config.json` exists.
-4. `PAI_Lab/h1_*.py` are redirect stubs only.
+4. There are no H1 scripts in `PAI_Lab` anymore; any `h1_*.py` there is not canonical.
+5. Rebuild this folder's venv: delete `.venv`, re-run `scripts/setup_mac.sh` (or the Linux/Windows script).
 
-**Revert:** the old project at `/Users/jesse.martin/Documents/H1_Lab` is untouched and still works (`.venv/bin/python3 h1_control.py status` there). To undo the migration, keep using it and delete `PyControl/devices/H1_Lab` contents except the placeholder README. To rebuild this venv: delete `.venv`, re-run `scripts/setup_mac.sh`.
+### Undo (return to the pre-migration project)
+
+Backup convention: a retired copy is renamed `<Folder>_backup_<YYYYMMDD>` in the same parent folder (here `~/Documents/H1_Lab_backup_20260929`).
+
+1. Rename `~/Documents/H1_Lab_backup_20260929` back to `~/Documents/H1_Lab` (its `.venv` only works at that path).
+2. `cd ~/Documents/H1_Lab && .venv/bin/python3 h1_control.py status` (reads its `.env`). If it fails, delete its `.venv` and recreate: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`, then re-add the Mac `DYLD_LIBRARY_PATH` line.
+3. Optional, to remove the new copy from history: in PyControl, `git revert 449ab4f` (plus any later H1 commits).
+4. Update this handoff and `PAI_Lab/docs/MOVE_STATUS.md` to say which copy is canonical.
+
+### Before you delete the backup
+
+Do these in order; stop and ask the user if any step fails.
+
+1. **Smoke test passes** (steps 1–4 above) from `PyControl/devices/H1_Lab`.
+2. **Nothing needed lives only in the backup:**
+   - `.env` → value already in `config.json` (`ftdi_device_id` `22040106`).
+   - `.docx` guides, `H1_autosetup.md`, old handoff → superseded by `docs/*.md` and this file.
+   - `h1_absorbance_test.py` → superseded by `h1_control.py absorbance`.
+   - Old `h1_absorbance_*` result files → copy to `results/` (or elsewhere) if the user wants them.
+3. **Find references:** `rg -n "H1_Lab_backup_20260929" ~/Documents/PyControl ~/Documents/PAI_Lab`. Update each hit to say the backup was deleted (date), and replace the **Undo** section above with "Undo no longer available locally; use git history."
+4. **User confirms deletion** explicitly. Prefer moving to Trash over `rm`.
+5. **Log it** in **Progress** and the migration table.
 
 ---
 
 ## Sibling projects
 
-| Device folder | Status |
-| --- | --- |
-| `Flex_Lab` | Active (PyControl) |
-| `MiR_API` | See its own HANDOFF — do not modify for H1 work |
-| `PAI_Lab` | Hub, separate folder `~/Documents/PAI_Lab` |
+| Device folder | Handoff file | Status |
+| --- | --- | --- |
+| `Flex_Lab` | `FLEX_HANDOFF.md` | Active (PyControl) |
+| `MiR_API` | `MIR_HANDOFF.md` (when migrated) | Do not modify for H1 work |
+| `PAI_Lab` | (hub — separate) | `~/Documents/PAI_Lab` |
 
 ---
 
@@ -166,6 +224,7 @@ python h1_control.py status
 - Ask before tray motion or plate reads.
 - No PyLabRobot inside `h1_gui.py`.
 - Never commit `config.json` / `.env`.
+- **No real usernames** in any file (code, docs, handoffs). Use `~/...` / `%USERPROFILE%\...`, or `<username>` when an absolute example is unavoidable (e.g. `/Users/<username>/Documents/PyControl`). Code must derive paths from its own location, never from a home folder.
 - Don't fold hub code into this folder.
 
 ## User workflow preferences
@@ -199,4 +258,4 @@ python h1_control.py status
 | **`status`** | H1's read-only health check (Flex's `ping` equivalent) |
 | **Device id / serial** | FTDI USB serial (Flex's IP equivalent) |
 | **PLR** | PyLabRobot |
-| **Handoff** | This file |
+| **Handoff** | This file (`H1_HANDOFF.md`) |

@@ -7,7 +7,7 @@ Device control package inside the shared **PyControl** tree: USB tray control, s
 | [docs/SETUP.md](docs/SETUP.md) | Humans — install on Mac / Windows / Linux |
 | [docs/USER_GUIDE.md](docs/USER_GUIDE.md) | Humans — run CLI commands and the GUI |
 | [docs/AUTOMATION.md](docs/AUTOMATION.md) | Agents — automate setup from a terminal |
-| [HANDOFF.md](HANDOFF.md) | Agents — project status / durable facts |
+| [H1_HANDOFF.md](H1_HANDOFF.md) | Agents — project status / durable facts |
 
 **Quick start:** run `scripts/setup_mac.sh`, `scripts/setup_linux.sh`, or `scripts/setup_windows.ps1`, then see the User Guide.
 

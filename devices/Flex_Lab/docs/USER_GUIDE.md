@@ -51,8 +51,8 @@ All commands print **one JSON object per line**.
 | Upload a protocol file | `python flex_control.py upload protocols/demo_transfer.py` |
 | Run a stored protocol by name | `python flex_control.py run "Demo"` |
 | Run without waiting | `python flex_control.py run "Demo" --no-wait` |
-| Pause / play / stop | `python flex_control.py pause <run_id>` / `play` / `stop` |
-| Wait until finished | `python flex_control.py wait <run_id>` |
+| Pause / play / stop | `python flex_control.py pause RUN_ID` / `play RUN_ID` / `stop RUN_ID` |
+| Wait until finished | `python flex_control.py wait RUN_ID` |
 | Demo transfer | `python flex_control.py transfer --source A1 --dest B1 --volume 10` |
 | Emit choreography signal | `python flex_control.py signal emit flex_done --payload status=ok` |
 | Wait for signal | `python flex_control.py signal wait start_transfer --timeout 300` |
@@ -86,6 +86,36 @@ python flex_control.py run "Flex Lab Demo Transfer" \
   --param dest_well=B1 \
   --param volume_ul=10
 ```
+
+### Pause / resume from the terminal
+
+Some protocols pause for a note and wait for **Confirm & resume** on the Flex touchscreen. While `run` / `transfer` / `wait` is polling, the CLI will detect `paused` and ask:
+
+- `y` — resume from the terminal (same effect as Confirm & resume)
+- `n` — keep waiting (you can still use the touchscreen)
+- `s` — stop the run on the Flex
+
+You can also resume a known run id anytime:
+
+```bash
+python flex_control.py play 999ba97c-3e2f-4afd-b1eb-168139442d9c
+```
+
+Use the real id from the `run_created` JSON line — **do not** type angle brackets like `<run_id>` (zsh treats `<...>` as file redirection and errors).
+
+### Ctrl+C vs stopping the Flex
+
+Canceling the terminal script alone does **not** stop the robot. With the updated CLI, Ctrl+C asks:
+
+`Also STOP run ... on the Flex? [y/N]`
+
+Answer `y` to send a stop to the Flex. Or in another terminal (paste your real run id):
+
+```bash
+python flex_control.py stop 999ba97c-3e2f-4afd-b1eb-168139442d9c
+```
+
+For PAI/automation (no questions): add `--no-prompt`.
 
 ---
 

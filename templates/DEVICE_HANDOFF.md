@@ -1,6 +1,9 @@
-# __DEVICE_NAME__ — Agent Handoff
+# __DEVICE_HANDOFF_FILE__ — __DEVICE_NAME__
 
 Living device brief under **PyControl**. Update when goals, progress, or durable facts change.
+
+Filename must be `__DEVICE_HANDOFF_FILE__` (pattern `<TAG>_HANDOFF.md`, never bare `HANDOFF.md`).  
+See repo-root `ALIGNMENT_HANDOFF.md`.
 
 ## How to update
 
@@ -30,6 +33,7 @@ YYYY-MM-DD — (describe change)
 | Network | `__WIFI_OR_NETWORK__` |
 | Host | `__DEFAULT_HOST__` |
 | CLI | `__CLI_MODULE__` |
+| Handoff | `__DEVICE_HANDOFF_FILE__` |
 
 ## Quick verify
 

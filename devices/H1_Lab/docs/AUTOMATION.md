@@ -4,35 +4,26 @@ Upload this file into a chat so an agent can set up and verify the H1 CLI from a
 
 ## Goals
 
-1. Locate or place the project under the **PyControl** layout.
-2. Run the correct OS setup script (idempotent).
-3. Configure the H1 USB serial (**manual default** `22040106`, optional discover).
-4. Verify with `status` (read-only) → guided checks.
-5. Stop and report if a **manual gate** blocks progress (power/USB, missing Python, USB driver, user denied folder create).
+1. Ensure a **machine handoff** exists; create from `machines/MACHINE_HANDOFF.example.md` if missing (ask for git identity).
+2. Locate or place the project under the **PyControl** layout (ask before creating folders).
+3. Run the correct OS setup script (idempotent).
+4. Configure the H1 USB serial (**manual default** from `H1_HANDOFF.md` / config; optional discover).
+5. Verify with `status` (read-only) → guided checks against **`H1_HANDOFF.md`**.
+6. Stop and report if a **manual gate** blocks progress.
 
 ## Canonical layout
 
 ```text
 PyControl/
   ALIGNMENT_HANDOFF.md
-  README.md
-  templates/
-  devices/
-    Flex_Lab/          ← other device
-    MiR_API/           ← other device
-    H1_Lab/            ← this device
+  machines/<HOSTNAME>_HANDOFF.md
+  devices/H1_Lab/            ← this device
 ```
 
-Preferred location on a machine:
+Preferred location: `~/PyControl` or `%USERPROFILE%\PyControl` (or machine handoff path).
 
-| OS | Path |
-| --- | --- |
-| Mac / Linux | `~/PyControl` |
-| Windows | `%USERPROFILE%\PyControl` |
-
-**Path rule:** Never hard-code `/Users/jesse...` or one person’s Documents path.  
-Resolve the device root as the directory that contains `h1_control.py` and `config.example.json`.  
-Setup scripts live in `devices/H1_Lab/scripts/` and compute paths from their own location.
+**Path rule:** Never hard-code a real username in scripts or this brief. Use `~` / `%USERPROFILE%` / `<username>`.  
+**Privacy scan:** Fix real homes in SETUP/AUTOMATION only; do not scrub accurate undo paths in `H1_HANDOFF.md`.
 
 ## Zip / USB (no git clone)
 
@@ -44,9 +35,11 @@ Setup scripts live in `devices/H1_Lab/scripts/` and compute paths from their own
 
 | OS | Command |
 | --- | --- |
-| macOS | `chmod +x "$DEVICE_DIR/scripts/setup_mac.sh" && "$DEVICE_DIR/scripts/setup_mac.sh" --non-interactive --device-id 22040106` |
-| Linux | `chmod +x "$DEVICE_DIR/scripts/setup_linux.sh" && "$DEVICE_DIR/scripts/setup_linux.sh" --non-interactive --device-id 22040106` |
-| Windows | `powershell -ExecutionPolicy Bypass -File "$DEVICE_DIR\scripts\setup_windows.ps1" -NonInteractive -DeviceId 22040106` |
+| macOS | `chmod +x "$DEVICE_DIR/scripts/setup_mac.sh" && "$DEVICE_DIR/scripts/setup_mac.sh" --non-interactive --device-id <H1_SERIAL>` |
+| Linux | `chmod +x "$DEVICE_DIR/scripts/setup_linux.sh" && "$DEVICE_DIR/scripts/setup_linux.sh" --non-interactive --device-id <H1_SERIAL>` |
+| Windows | `powershell -ExecutionPolicy Bypass -File "$DEVICE_DIR\scripts\setup_windows.ps1" -NonInteractive -DeviceId <H1_SERIAL>` |
+
+Take `<H1_SERIAL>` from `H1_HANDOFF.md` or `config.json`.
 
 Interactive serial choice (human present): run the script **without** `--non-interactive`.  
 Discover instead of a fixed serial: `--discover` (PowerShell `-Discover`).  
@@ -70,8 +63,8 @@ Scripts print `SETUP OK` (exit 0) or `SETUP INCOMPLETE` (exit 1).
 
 Run from `DEVICE_DIR` with `.venv` active (setup script already does this):
 
-1. `python h1_control.py discover` → lists `22040106` (read-only)
-2. `python h1_control.py status` → `Connected to Synergy H1.` / `Serial: 22040106` (read-only)
+1. `python h1_control.py discover` → lists the serial from `H1_HANDOFF.md` (read-only)
+2. `python h1_control.py status` → connected; serial matches **`H1_HANDOFF.md`** (read-only)
 3. **Ask before** `open` / `close` / `cycle` (tray motion)
 4. **Ask before** `absorbance` (motion + plate load)
 5. Optional: `python h1_gui.py` (user clicks Status)
@@ -83,4 +76,5 @@ Re-running setup scripts is safe: reuse `.venv`, refresh requirements, keep `con
 ## After success
 
 Point the human to `docs/USER_GUIDE.md`.  
+Device brief: **`H1_HANDOFF.md`**.  
 If aligning other devices, use the repo-root **`ALIGNMENT_HANDOFF.md`**.

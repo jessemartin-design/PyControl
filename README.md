@@ -4,39 +4,40 @@ Shared kit for lean, cross-platform **device CLIs** used in lab demos (humans or
 
 ```text
 PyControl/
-  README.md                 ← you are here
-  ALIGNMENT_HANDOFF.md      ← upload into other device chats to align them
-  templates/                ← blank docs for new devices
+  README.md
+  ALIGNMENT_HANDOFF.md       ← upload into other device chats
+  machines/                  ← per-computer operator/git facts (local *_HANDOFF.md gitignored)
+  templates/
   devices/
-    Flex_Lab/               ← Opentrons Flex (ready)
-    MiR_API/                ← placeholder until migrated
-    H1_Lab/                 ← Biotek Synergy H1 (ready)
+    Flex_Lab/
+    MiR_API/
+    H1_Lab/
 ```
 
 ## Preferred location on a computer
 
 | OS | Path |
 | --- | --- |
-| Mac / Linux | `~/PyControl` |
+| Mac / Linux | `~/PyControl` (or path in `machines/<HOSTNAME>_HANDOFF.md`) |
 | Windows | `%USERPROFILE%\PyControl` |
 
-Sharing is by **zip / USB** (not git clone). After all devices are aligned and tested, zip this whole `PyControl` folder (exclude each device’s `.venv`).
+Sharing is by **zip / USB**. Exclude each device’s `.venv` and do not rely on gitignored `machines/*_HANDOFF.md` files traveling with the zip (recipients create their own machine handoff during setup).
 
 ## Devices
 
 | Folder | Device | Status |
 | --- | --- | --- |
-| `devices/Flex_Lab` | Opentrons Flex | Active — use its `docs/` + `scripts/` |
-| `devices/MiR_API` | MiR robot API | Placeholder — migrate via Alignment Handoff |
-| `devices/H1_Lab` | Biotek Synergy H1 (USB) | Active — use its `docs/` + `scripts/` |
+| `devices/Flex_Lab` | Opentrons Flex | Active — `docs/` + `FLEX_HANDOFF.md` |
+| `devices/MiR_API` | MiR robot API | Placeholder — migrate via Alignment |
+| `devices/H1_Lab` | Biotek Synergy H1 (USB) | Active — `docs/` + `H1_HANDOFF.md` |
 
 ## New computer (after you have a zip)
 
-1. Unzip to `~/PyControl` (or Windows equivalent). Ask an agent with `devices/<Name>/docs/AUTOMATION.md` if you want help.
-2. Join that device’s Wi‑Fi / network (USB devices like H1_Lab: plug in the cable instead).
-3. Run that device’s setup script under `devices/<Name>/scripts/`.
-4. Confirm with the device’s ping/status command from its User Guide.
+1. Unzip to `~/PyControl` (ask before using another folder).
+2. Create `machines/<HOSTNAME>_HANDOFF.md` from the example (git name/email, preferred path).
+3. Connect that device’s network or USB.
+4. Run `devices/<Name>/scripts/setup_…` then confirm with the User Guide health command.
 
-## Aligning MiR_API or H1_Lab into this tree
+## Aligning another device
 
-Open that project’s Cursor chat, upload **`ALIGNMENT_HANDOFF.md`**, and instruct the agent to follow it (including rename/path updates and guided verification). Prefer **one** PyControl folder on the machine; add device subfolders rather than creating a second kit.
+Upload **`ALIGNMENT_HANDOFF.md`** into that chat. Agents should: migrate into this tree, use `<TAG>_HANDOFF.md`, scrub usernames from SETUP/AUTOMATION only, preserve accurate device-handoff history, and ensure a machine handoff exists.

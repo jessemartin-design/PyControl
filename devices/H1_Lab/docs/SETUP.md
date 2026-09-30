@@ -1,19 +1,23 @@
 # H1_Lab — Setup Guide
 
 Get a computer ready to run the H1 CLI and GUI.  
-**Success check:** `python h1_control.py status` prints `Connected to Synergy H1.` and `Serial: 22040106`. This command only reads information; the tray does not move.
+**Success check:** `python h1_control.py status` prints a connected Synergy H1 message.  
+Confirm the **serial** against `H1_HANDOFF.md`. This command only reads information; the tray does not move.
 
-| Need | Value |
+| Need | Where to find it |
 | --- | --- |
-| Connection | **USB cable** from the H1 to this computer (no Wi‑Fi needed) |
-| Default H1 USB serial | `22040106` (FTDI device id) |
-| Python | **3.9+** (this lab uses 3.14 on Mac) |
+| Connection | **USB** from H1 to this computer |
+| H1 USB serial | `H1_HANDOFF.md` / `config.example.json` |
+| Python | **3.9+** |
 | Project folder | `PyControl/devices/H1_Lab/` |
+| Operator / git identity | `PyControl/machines/<HOSTNAME>_HANDOFF.md` |
 
-Scripts resolve paths from their own location, so a USB/zip copy works even if the drive letter or home folder differs. Preferred install location on a new machine:
+Scripts resolve paths from their own location (zip/USB safe). Preferred install location:
 
-- Mac/Linux: `~/PyControl/`
+- Mac/Linux: `~/PyControl/` (or path in the **machine handoff**)
 - Windows: `%USERPROFILE%\PyControl\`
+
+Do **not** paste another person’s `/Users/…` path into setup commands.
 
 ---
 
@@ -23,6 +27,8 @@ Scripts resolve paths from their own location, so a USB/zip copy works even if t
 2. Plug the H1's USB cable into **this** computer.
 3. Close **Gen5** or any other program that talks to the H1 (only one program can use it at a time).
 4. Confirm you have the **`PyControl`** folder (unzipped from USB, or copied).
+
+**Machine handoff + git (agents and humans):** if `machines/<HOSTNAME>_HANDOFF.md` is missing, copy the example, ask for operator name + git name/email + preferred PyControl path, save the file, and with permission set `git config --global user.name` / `user.email`. See repo-root `ALIGNMENT_HANDOFF.md`.
 
 ---
 

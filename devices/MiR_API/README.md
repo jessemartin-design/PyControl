@@ -9,4 +9,4 @@ Upload repo-root [`ALIGNMENT_HANDOFF.md`](../../ALIGNMENT_HANDOFF.md) into the M
 PyControl/devices/MiR_API/
 ```
 
-Then run that device’s setup + guided verification checklist.
+Create device brief as **`MIR_HANDOFF.md`** (not `HANDOFF.md`). Then run that device’s setup + guided verification checklist.

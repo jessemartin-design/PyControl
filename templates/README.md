@@ -7,6 +7,6 @@ Device package inside **PyControl**.
 | docs/SETUP.md | Install |
 | docs/USER_GUIDE.md | Everyday commands |
 | docs/AUTOMATION.md | Agent setup |
-| HANDOFF.md | Status / durable facts |
+| __DEVICE_HANDOFF_FILE__ | Status / durable facts (`<TAG>_HANDOFF.md`) |
 
 Parent: `../../ALIGNMENT_HANDOFF.md`

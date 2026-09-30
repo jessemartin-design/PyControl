@@ -4,87 +4,80 @@ Upload this file into a chat so an agent can set up and verify the Flex CLI from
 
 ## Goals
 
-1. Locate or place the project under the **PyControl** layout.
-2. Run the correct OS setup script (idempotent).
-3. Configure Flex IP (**manual default**, optional discover).
-4. Verify with `ping` → guided status check.
-5. Stop and report if a **manual gate** blocks progress (Wi‑Fi, missing Python, user denied folder create).
+1. Ensure a **machine handoff** exists (`machines/<HOSTNAME>_HANDOFF.md`); create from the example if missing (ask user for git identity and paths).
+2. Locate or place the project under the **PyControl** layout (ask before creating folders).
+3. Run the correct OS setup script (idempotent).
+4. Configure Flex IP (**manual default** from device handoff / config; optional discover).
+5. Verify with `ping` → guided status check (compare name/IP to **`FLEX_HANDOFF.md`**).
+6. Stop and report if a **manual gate** blocks progress.
 
 ## Canonical layout
 
 ```text
 PyControl/
   ALIGNMENT_HANDOFF.md
-  README.md
-  templates/
-  devices/
-    Flex_Lab/          ← this device
-    MiR_API/           ← other device (may be empty until migrated)
-    H1_Lab/            ← other device (may be empty until migrated)
+  machines/<HOSTNAME>_HANDOFF.md    ← local; gitignored
+  devices/Flex_Lab/                 ← this device
 ```
 
-Preferred location on a machine:
+Preferred docs paths: `~/PyControl` or `%USERPROFILE%\PyControl` (override from machine handoff).
 
-| OS | Path |
-| --- | --- |
-| Mac / Linux | `~/PyControl` |
-| Windows | `%USERPROFILE%\PyControl` |
+**Path rule:** Never hard-code a real OS username into scripts or this brief. Use `~` / `%USERPROFILE%` / `<username>`.  
+Resolve device root as the directory with `flex_control.py` + `config.example.json`.
 
-**Path rule:** Never hard-code `/Users/jesse...` or one person’s Documents path.  
-Resolve the device root as the directory that contains `flex_control.py` and `config.example.json`.  
-Setup scripts live in `devices/Flex_Lab/scripts/` and compute paths from `__file__` / `$PSScriptRoot`.
+## Privacy scan (do this every time)
 
-## Zip / USB (no git clone)
+Search SETUP/AUTOMATION (this device and any project being aligned) for real `/Users/<person>` homes. Fix those docs.  
+**Do not** scrub accurate backup/undo paths inside `FLEX_HANDOFF.md` or other `<TAG>_HANDOFF.md` files.
 
-This project is shared by **zip or USB**, not git clone.
+## Zip / USB
 
-1. Ask the user where the unzipped `PyControl` folder is.
-2. If missing, **ask permission** before creating `~/PyControl` (or `%USERPROFILE%\PyControl`) and copying/extracting into it.
-3. If the user says no, stop and tell them exactly which folder to provide.
+1. Ask where `PyControl` is.
+2. If missing, **ask permission** before creating the preferred path from the machine handoff (default `~/PyControl`).
+3. If the user declines, stop and request an existing path.
 
-## OS detection → setup command
+## Machine handoff + git
 
-Working directory may be anywhere; invoke scripts by absolute path once `DEVICE_DIR` is known.
+1. Detect hostname; open or create `machines/<HOSTNAME>_HANDOFF.md`.
+2. If git name/email blank, ask the user; write them into the machine handoff.
+3. With permission: `git config --global user.name` / `user.email`.
+4. Reuse the file on later runs (agent “memory” for this PC).
+
+## OS detection → setup
 
 | OS | Command |
 | --- | --- |
-| macOS | `chmod +x "$DEVICE_DIR/scripts/setup_mac.sh" && "$DEVICE_DIR/scripts/setup_mac.sh" --non-interactive --ip 10.14.19.180` |
-| Linux | `chmod +x "$DEVICE_DIR/scripts/setup_linux.sh" && "$DEVICE_DIR/scripts/setup_linux.sh" --non-interactive --ip 10.14.19.180` |
-| Windows | `powershell -File "$DEVICE_DIR\scripts\setup_windows.ps1" -NonInteractive -Ip 10.14.19.180` |
+| macOS | `chmod +x "$DEVICE_DIR/scripts/setup_mac.sh" && "$DEVICE_DIR/scripts/setup_mac.sh" --non-interactive --ip <FLEX_IP>` |
+| Linux | same with `setup_linux.sh` |
+| Windows | `powershell -File "$DEVICE_DIR\scripts\setup_windows.ps1" -NonInteractive -Ip <FLEX_IP>` |
 
-Interactive IP choice (human present): run the script **without** `--non-interactive` so they can pick manual vs discover.
+Take `<FLEX_IP>` from `FLEX_HANDOFF.md` or `config.json`. Interactive setups: omit `--non-interactive` for manual vs discover prompts.
 
-Optional discover instead of fixed IP:
-
-```bash
-"$DEVICE_DIR/scripts/setup_mac.sh" --non-interactive --discover
-```
-
-## Manual gates (do not invent workarounds)
+## Manual gates
 
 | Gate | Agent action |
 | --- | --- |
-| Not on robot Wi‑Fi | Ask user to join `optrn-nyc1-robotics`, then retry |
-| Python missing | Give OS-specific install hint from SETUP.md; do not install system packages without permission |
-| User denies creating `~/PyControl` | Stop; ask for existing path |
-| `ping` fails after setup | Report Wi‑Fi + `robot_ip`; try browser health URL; do not start liquid-handling runs |
+| Wrong / unknown Wi‑Fi | Point user to SSID in `FLEX_HANDOFF.md` |
+| Python missing | SETUP.md hints; ask before installing packages |
+| User denies creating PyControl | Stop; ask for path |
+| `ping` fails | Wi‑Fi + IP from handoff/config; no motion commands |
+| Machine handoff refused | Explain commits/setup memory will be painful; retry ask |
 
-**Do not** auto-launch the Opentrons App as part of CLI setup.
+**Do not** auto-launch the Opentrons App for CLI setup.
 
-## Verification checklist (guide the user)
+## Verification checklist
 
-Run from `DEVICE_DIR` with `.venv` active (setup script already does this):
-
-1. `python flex_control.py ping` → expect `ping_ok` / `Chemelian`
-2. `python flex_control.py status` → expect reachable + right-mount P50
-3. `python flex_control.py protocols` → list stored protocols
-4. Ask before any `run` / `transfer` (motion / liquid)
+1. `python flex_control.py ping` → `ping_ok`
+2. Robot name / model match **`FLEX_HANDOFF.md`**
+3. `python flex_control.py status` → reachable + expected pipette (see handoff)
+4. `python flex_control.py protocols` (optional list)
+5. Ask before `run` / `transfer`
 
 ## Idempotency
 
-Re-running setup scripts is safe: reuse `.venv`, refresh requirements, re-apply IP options, ping again.
+Re-run setup safely: reuse `.venv`, refresh requirements, re-apply IP, ping again.
 
 ## After success
 
-Point the human to `docs/USER_GUIDE.md`.  
-If aligning other devices (MiR_API, H1_Lab), use the repo-root **`ALIGNMENT_HANDOFF.md`**.
+Point humans to `docs/USER_GUIDE.md` and `FLEX_HANDOFF.md`.  
+Cross-device process: repo-root **`ALIGNMENT_HANDOFF.md`**.

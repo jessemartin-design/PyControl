@@ -1,29 +1,40 @@
 # Flex_Lab — Setup Guide
 
 Get a computer ready to run the Flex CLI.  
-**Success check:** `python flex_control.py ping` prints `"event": "ping_ok"` and the robot name (`Chemelian`).
+**Success check:** `python flex_control.py ping` prints `"event": "ping_ok"`.  
+Confirm the reported robot **name** and **IP** against `FLEX_HANDOFF.md` (device-specific durable facts live there, not as hard requirements copied into every setup doc).
 
-| Need | Value |
+| Need | Where to find it |
 | --- | --- |
-| Wi‑Fi | `optrn-nyc1-robotics` (same network as the Flex) |
-| Default Flex IP | `10.14.19.180` |
+| Robot Wi‑Fi | `FLEX_HANDOFF.md` (lab network name) |
+| Flex IP | `config.example.json` / `config.json`, or `FLEX_HANDOFF.md` |
 | Python | **3.9+** (3.9–3.12 preferred) |
 | Project folder | `PyControl/devices/Flex_Lab/` |
+| Operator / git identity | `PyControl/machines/<HOSTNAME>_HANDOFF.md` |
 
-Scripts resolve paths from their own location, so a USB/zip copy works even if the drive letter or home folder differs. Preferred install location on a new machine:
+Scripts resolve paths from their own location (zip/USB safe). Preferred install location:
 
-- Mac/Linux: `~/PyControl/`
+- Mac/Linux: `~/PyControl/` (or the path in your **machine handoff**)
 - Windows: `%USERPROFILE%\PyControl\`
+
+Do **not** paste another person’s `/Users/…` home path into commands. If unsure where PyControl is, ask or create `~/PyControl` with permission.
 
 ---
 
-## Before any OS steps (manual gate)
+## Before any OS steps (manual gates)
 
-1. Join Wi‑Fi **`optrn-nyc1-robotics`**.
-2. Confirm you have the **`PyControl`** folder (unzipped from USB, or this repo renamed/moved to `PyControl`).
-3. Open a terminal **inside** `PyControl/devices/Flex_Lab` *or* run the setup script from `scripts/` (it finds the device folder automatically).
+1. Join the Flex robot Wi‑Fi (name in `FLEX_HANDOFF.md`).
+2. Confirm you have the **`PyControl`** folder (USB unzip or existing tree).
+3. Open a terminal in `PyControl/devices/Flex_Lab`, or run `scripts/setup_*.sh` / `.ps1` (they locate the device folder automatically).
 
-The Opentrons desktop App is **optional** (calibration / deck checks only). This CLI does not need it for `ping` / `run` / `transfer`.
+**Machine handoff + git (agents and humans):**
+
+1. Note this computer’s hostname.
+2. If `machines/<HOSTNAME>_HANDOFF.md` is missing, copy `machines/MACHINE_HANDOFF.example.md`, ask the user for display name, git name, git email, and preferred PyControl path, then save.
+3. With the user’s permission, set git identity on this computer (`git config --global user.name` / `user.email`) and record it in the machine handoff.
+4. On later visits, read the machine handoff first; only re-prompt if fields are blank.
+
+The Opentrons desktop App is **optional**. This CLI does not need it for `ping` / `run` / `transfer`.
 
 ---
 
@@ -32,7 +43,7 @@ The Opentrons desktop App is **optional** (calibration / deck checks only). This
 ### Mac
 
 ```bash
-cd ~/PyControl/devices/Flex_Lab   # or your actual PyControl path
+cd ~/PyControl/devices/Flex_Lab   # or path from machines/<HOSTNAME>_HANDOFF.md
 chmod +x scripts/setup_mac.sh
 ./scripts/setup_mac.sh
 ```
@@ -62,18 +73,18 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 During setup you will be asked:
 
-1. **Manual IP (recommended)** — press Enter to keep `10.14.19.180`, or type another IP  
-2. **Auto-discover** — scan this Wi‑Fi subnet for an Opentrons robot (falls back to manual if none/ambiguous)
+1. **Manual IP (recommended)** — keep the value from `config.json` / example, or type another  
+2. **Auto-discover** — scan this subnet for an Opentrons robot (falls back to manual)
 
-Non-interactive examples (agents / automation):
+Non-interactive examples (agents; substitute IP from device handoff / config):
 
 ```bash
-./scripts/setup_mac.sh --non-interactive --ip 10.14.19.180
-./scripts/setup_linux.sh --non-interactive --ip 10.14.19.180
+./scripts/setup_mac.sh --non-interactive --ip <FLEX_IP>
+./scripts/setup_linux.sh --non-interactive --ip <FLEX_IP>
 ```
 
 ```powershell
-.\scripts\setup_windows.ps1 -NonInteractive -Ip 10.14.19.180
+.\scripts\setup_windows.ps1 -NonInteractive -Ip <FLEX_IP>
 ```
 
 ---
@@ -85,28 +96,17 @@ Non-interactive examples (agents / automation):
 1. Create/activate a virtual environment in `devices/Flex_Lab`.
 2. `pip install -r requirements.txt`
 3. Copy `config.example.json` → `config.json` if needed.
-4. Set `robot_ip` in `config.json` (or `python flex_control.py discover --set-ip ...`).
+4. Set `robot_ip` (or `python flex_control.py discover --set-ip …`).
 5. `python flex_control.py ping`
 
 ### Mac / Linux venv
 
 ```bash
-cd /path/to/PyControl/devices/Flex_Lab
+cd ~/PyControl/devices/Flex_Lab   # or your PyControl path
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp -n config.example.json config.json
-python flex_control.py ping
-```
-
-### Windows venv (Command Prompt)
-
-```bat
-cd %USERPROFILE%\PyControl\devices\Flex_Lab
-python -m venv .venv
-.venv\Scripts\activate.bat
-pip install -r requirements.txt
-copy /Y config.example.json config.json
 python flex_control.py ping
 ```
 
@@ -127,17 +127,18 @@ python flex_control.py ping
 
 | Problem | What to check | Fix |
 | --- | --- | --- |
-| `ping` fails / connection error | Wrong Wi‑Fi | Join `optrn-nyc1-robotics` |
-| `ping` fails | Wrong IP | Edit `config.json` `robot_ip`, or run `python flex_control.py discover --set-ip 10.14.19.180` |
-| `python` / `python3` not found | Python not installed or not on PATH | Install Python 3.9+; on Windows tick “Add to PATH” |
-| `ensurepip` / `venv` errors on Linux | Missing `python3-venv` | `sudo apt install python3-venv` |
-| PowerShell blocks scripts | Execution policy | `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` |
-| Discovery finds nothing | Guest Wi‑Fi / isolation / different subnet | Use **manual IP** |
-| Browser test | API reachable? | Open `http://10.14.19.180:31950/health` |
+| `ping` fails | Wrong Wi‑Fi | Join network listed in `FLEX_HANDOFF.md` |
+| `ping` fails | Wrong IP | Edit `config.json`, or `discover --set-ip …` using IP from handoff |
+| `python` not found | PATH / install | Install Python 3.9+ |
+| venv errors on Linux | `python3-venv` | `sudo apt install python3-venv` |
+| PowerShell blocks scripts | Execution policy | Process-scoped Bypass (see above) |
+| Discovery finds nothing | Isolated Wi‑Fi | Use **manual IP** |
+| Git rejects commits | Identity unset | Fill machine handoff; set `user.name` / `user.email` |
 
 ---
 
 ## After setup
 
-See **[USER_GUIDE.md](USER_GUIDE.md)** for everyday commands.  
-Agents: see **[AUTOMATION.md](AUTOMATION.md)**.
+See **[USER_GUIDE.md](USER_GUIDE.md)**.  
+Device facts: **[FLEX_HANDOFF.md](../FLEX_HANDOFF.md)**.  
+Agents: **[AUTOMATION.md](AUTOMATION.md)** and repo-root `ALIGNMENT_HANDOFF.md`.

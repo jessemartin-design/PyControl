@@ -1,7 +1,9 @@
-# Flex_Lab — Agent Handoff
+# FLEX_HANDOFF — Opentrons Flex
 
 Living device brief for **Opentrons Flex** under the shared **PyControl** layout.  
 **Update this file whenever objectives, progress, or durable facts change.**
+
+Filename convention: device handoffs are `<TAG>_HANDOFF.md` (this file = `FLEX_HANDOFF.md`). See repo-root `ALIGNMENT_HANDOFF.md`.
 
 ---
 
@@ -19,7 +21,7 @@ Living device brief for **Opentrons Flex** under the shared **PyControl** layout
 
 ## Last updated
 
-2026-09-29 — Restructured into PyControl; added Setup/User/Automation docs, OS setup scripts, IP manual/discover flow.
+2026-09-30 — Privacy rules: SETUP/AUTOMATION/Alignment generalized; device handoff keeps durable facts; machine handoff convention added.
 
 ---
 
@@ -45,16 +47,23 @@ Full PAI orchestration, research LIMS, installer/Docker/systemd packaging.
 | Done | `docs/SETUP.md`, `USER_GUIDE.md`, `AUTOMATION.md` |
 | Done | `scripts/setup_mac.sh`, `setup_linux.sh`, `setup_windows.ps1` |
 | Done | `config.example.json` + discover/`--set-ip` |
-| Pending | Re-verify `ping` after restructure on this machine |
-| Pending | First guided live `run` / `transfer` (ask user) |
-| Pending | MiR_API + H1_Lab migrated into `devices/` via Alignment Handoff |
+| Done | Re-verify `ping` after restructure (`ping_ok` / Chemelian) |
+| Done | Initial git commit `8966991` (PyControl root) |
+| Done | Guided live `run` (Demo) and `transfer` motion tests |
+| Done | Terminal prompts for pause-resume and Ctrl+C → optional Flex stop |
+| Done | Demo + terminal pause-resume prompt verified live |
+| Done | H1_Lab migrated into `devices/H1_Lab` (`SETUP OK` 2026-09-29) |
+| Done | Device handoff renamed to `FLEX_HANDOFF.md` |
+| Pending | MiR_API migrated into `devices/` via Alignment Handoff |
+| Pending | Commit recent Flex CLI/docs/handoff renames |
 | Pending | User creates zip after all three devices work |
 
 ### Next steps
 
-1. Run device setup script / `ping` to confirm post-move.
-2. Upload `ALIGNMENT_HANDOFF.md` into MiR_API and H1_Lab chats to migrate those projects.
-3. Guided confirm checklist per device; then zip `PyControl` for USB share.
+1. Fill **git identity** (and confirm hostname) in `../../machines/WS-RHCV7HYY6K_HANDOFF.md` (or rename file if Computer Name differs).
+2. Align **MiR_API** via `ALIGNMENT_HANDOFF.md` → `devices/MiR_API` + `MIR_HANDOFF.md`.
+3. Commit shareable doc changes (machine `*_HANDOFF.md` stays gitignored).
+4. After MiR verifies: zip `PyControl` for USB (exclude `.venv`; machine handoffs stay local).
 
 ---
 
@@ -88,14 +97,14 @@ Full PAI orchestration, research LIMS, installer/Docker/systemd packaging.
 | `scripts/` | OS setup entrypoints |
 | `protocols/demo_transfer.py` | Parameterized demo |
 | `signals/` | Choreography handshakes |
-| `HANDOFF.md` | This file |
+| `FLEX_HANDOFF.md` | This file |
 
-### Sibling projects (migrate later)
+### Sibling projects
 
-| Device folder | Current location (this Mac, pre-migration) |
-| --- | --- |
-| `MiR_API` | `/Users/jesse.martin/Desktop/MiR_API` |
-| `H1_Lab` | `/Users/jesse.martin/Documents/H1_Lab` |
+| Device folder | Handoff file | Status |
+| --- | --- | --- |
+| `MiR_API` | `MIR_HANDOFF.md` (when migrated) | Pending — often `~/Desktop/MiR_API` |
+| `H1_Lab` | `H1_HANDOFF.md` | Migrated → `PyControl/devices/H1_Lab` |
 
 Follow repo-root **ALIGNMENT_HANDOFF.md** — do not invent a second PyControl tree if one already exists.
 
@@ -114,4 +123,3 @@ python flex_control.py ping
 ## Open questions
 
 - Demo choreography stage names with PAI / manipulator?
-- Confirm wet deck before first `transfer`.
