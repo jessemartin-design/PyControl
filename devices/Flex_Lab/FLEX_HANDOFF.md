@@ -108,7 +108,7 @@ Full PAI orchestration, research LIMS, installer/Docker/systemd packaging.
 
 | Device folder | Handoff file | Status |
 | --- | --- | --- |
-| `MiR_API` | `MIR_HANDOFF.md` (when migrated) | Pending — often `~/Desktop/MiR_API` |
+| `MiR_API` | `MIR_HANDOFF.md` | Active (PyControl); Desktop backup kept |
 | `H1_Lab` | `H1_HANDOFF.md` | Migrated → `PyControl/devices/H1_Lab` |
 
 Follow repo-root **ALIGNMENT_HANDOFF.md** — do not invent a second PyControl tree if one already exists.

@@ -36,7 +36,7 @@ Device handoffs (`*_HANDOFF.md`) do ship: they record real device facts and who 
 | Folder | Device | Status |
 | --- | --- | --- |
 | `devices/Flex_Lab` | Opentrons Flex | Active — `FLEX_README.md`, tagged `docs/FLEX_*.md`, `FLEX_HANDOFF.md` |
-| `devices/MiR_API` | MiR robot API | Active — `MIR_README.md`, tagged `docs/MIR_*.md`, `MIR_HANDOFF.md` (Desktop copy pending rename after smoke test) |
+| `devices/MiR_API` | MiR robot API | Active — tagged `MIR_*.md` docs + `MIR_HANDOFF.md`; Desktop backup `MiR_API_backup_20260930` |
 | `devices/H1_Lab` | Biotek Synergy H1 (USB) | Active — `H1_README.md`, tagged `docs/H1_*.md`, `H1_HANDOFF.md` |
 
 ## New computer (after you have a zip)
