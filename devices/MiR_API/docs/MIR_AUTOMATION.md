@@ -72,6 +72,5 @@ Re-running setup scripts is safe: reuse `.venv`, refresh requirements, keep `.en
 ## After success
 
 Point the human to `docs/MIR_USER_GUIDE.md`.  
-Device brief: **`MIR_HANDOFF.md`**.  
-Deep API notes: `docs/PROJECT_KNOWLEDGE.md`.  
+Device brief + API/GUI diagnosis: **`MIR_HANDOFF.md`**.  
 If aligning other devices, use the repo-root **`ALIGNMENT_HANDOFF.md`**.

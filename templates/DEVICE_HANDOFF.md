@@ -4,6 +4,7 @@ Living device brief under **PyControl**. Update when goals, progress, or durable
 
 Filename must be `__DEVICE_HANDOFF_FILE__` (pattern `<TAG>_HANDOFF.md`, never bare `HANDOFF.md`).  
 Everyday docs in this device package must also be tagged: `__DEVICE_TAG___README.md`, `docs/__DEVICE_TAG___SETUP.md`, `docs/__DEVICE_TAG___USER_GUIDE.md`, `docs/__DEVICE_TAG___AUTOMATION.md`.  
+Put durable facts **and** any deep diagnosis / API quirks agents need in this handoff — do not keep a parallel `PROJECT_KNOWLEDGE.md`.  
 See repo-root `ALIGNMENT_HANDOFF.md`.
 
 ## How to update

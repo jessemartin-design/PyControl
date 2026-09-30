@@ -73,7 +73,7 @@ Override host for one run: `python mir_command.py --host <ip> Status`
 4. **Ask before Start** — area around the robot must be clear.
 5. Use **Pause** / **Stop** as needed.
 
-Closing the GUI while a **Charge** mission is active may prompt before aborting Charge — see `PROJECT_KNOWLEDGE.md` if you need the details.
+Closing the GUI while a **Charge** mission is active may prompt before aborting Charge — see `MIR_HANDOFF.md` (mission queue / Charge behavior) if you need the details.
 
 ---
 
@@ -91,5 +91,4 @@ Closing the GUI while a **Charge** mission is active may prompt before aborting 
 | --- | --- |
 | [MIR_SETUP.md](MIR_SETUP.md) | Install / `SETUP OK` |
 | [MIR_AUTOMATION.md](MIR_AUTOMATION.md) | Agent-driven setup |
-| [PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md) | API quirks, GUI behavior, endpoints |
-| [`../MIR_HANDOFF.md`](../MIR_HANDOFF.md) | Robot name, IP, Wi‑Fi, migration / undo |
+| [`../MIR_HANDOFF.md`](../MIR_HANDOFF.md) | Robot facts, smoke/undo, API/GUI diagnosis |

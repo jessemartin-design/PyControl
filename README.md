@@ -31,6 +31,8 @@ Don't use Finder “Compress” or Explorer “Compressed folder” — they inc
 
 Device handoffs (`*_HANDOFF.md`) do ship: they record real device facts and who did what, so share the zip with lab teammates only.
 
+**GitHub:** Prefer a **private** repo for the lab team. Device handoffs intentionally contain robot names, serials, LAN IPs, and SSIDs (not passwords). Do **not** push to a public GitHub repo until those handoffs are sanitized or replaced with placeholders — see `ALIGNMENT_HANDOFF.md` → **Sharing / zip** and privacy rules. Local `.env`, `config.json`, `.venv`, and `machines/*_HANDOFF.md` stay gitignored.
+
 ## Devices
 
 | Folder | Device | Status |

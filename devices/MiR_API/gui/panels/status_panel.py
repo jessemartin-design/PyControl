@@ -14,7 +14,7 @@ class StatusPanel(ttk.LabelFrame):
     Top status strip.
 
     Future: progress % / distance_to_next_target can be added here without
-    touching other panels — see docs/PROJECT_KNOWLEDGE.md.
+    touching other panels — see MIR_HANDOFF.md (GUI extension map).
     """
 
     def __init__(self, master: tk.Misc, **kwargs: Any) -> None:

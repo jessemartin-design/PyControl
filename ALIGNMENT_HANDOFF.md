@@ -150,8 +150,8 @@ Every **device-owned** markdown file is prefixed with that device’s short uppe
 
 1. Repo-root **`ALIGNMENT_HANDOFF.md`** and **`PyControl/README.md`** keep those generic names (shared kit).
 2. `templates/*` keep generic names as **source copies**. When installing into a device folder, rename immediately to the tagged names above — do **not** leave bare `README.md` / `docs/SETUP.md` inside a device package.
-3. Do **not** add thin redirect stubs (`README.md` → `<TAG>_README.md`). Point agents and humans at the tagged filenames via this Alignment doc, the device README table, and the device handoff.
-4. Each device owns **exactly one** `<TAG>_HANDOFF.md` at the device root (never bare `HANDOFF.md`).
+3. Each device owns **exactly one** `<TAG>_HANDOFF.md` at the device root (never bare `HANDOFF.md`). Put durable device facts **and** any deep diagnosis / API quirks agents need there — do **not** keep a parallel `PROJECT_KNOWLEDGE.md` (or similar) that duplicates the handoff.
+4. Do **not** add thin redirect stubs (`README.md` → `<TAG>_README.md`, or legacy `*AUTOSETUP*` → `<TAG>_AUTOMATION.md`). Point agents and humans at the tagged filenames via this Alignment doc, the device README table, and the device handoff. If a legacy `*AUTOSETUP*` file exists alongside `<TAG>_AUTOMATION.md`, delete the AUTOSETUP stub and fix links.
 5. Title handoffs like `# FLEX_HANDOFF — Opentrons Flex`. Sibling tables list other devices’ **folder + tagged handoff filename**.
 6. Rename legacy untagged device docs (`README.md`, `docs/SETUP.md`, …) → tagged names and fix all links in that device tree (scripts, handoff, docs).
 
@@ -264,6 +264,12 @@ git archive --format=zip --prefix=PyControl/ -o ../PyControl_YYYYMMDD.zip HEAD
 
 Do **not** use Finder “Compress” / Explorer “Send to → Compressed folder”: those include `.venv`, local config, and the machine handoff (personal data).
 
+### GitHub (same privacy bar as the zip)
+
+- **Private** lab repo: OK to include `*_HANDOFF.md` as written (teammates need IPs/serials).
+- **Public** repo: sanitize or stub device handoffs first (replace live IPs, serials, SSIDs, operator attribution paths with placeholders). Never commit `.env`, `config.json`, passwords, or `machines/<HOSTNAME>_HANDOFF.md`.
+- Machine handoffs remain gitignored either way.
+
 ---
 
 ## Smoke test, Undo, and backup deletion (required in every device handoff)
@@ -328,9 +334,9 @@ Expect `ping_ok`. Confirm robot **name / IP** against `devices/Flex_Lab/FLEX_HAN
 
 - [ ] Device at `PyControl/devices/<DeviceName>/`
 - [ ] Setup scripts idempotent
-- [ ] Tagged everyday docs present: `<TAG>_README.md`, `docs/<TAG>_SETUP.md`, `docs/<TAG>_USER_GUIDE.md`, `docs/<TAG>_AUTOMATION.md` (no bare device `README.md` / `docs/SETUP.md`)
+- [ ] Tagged everyday docs present: `<TAG>_README.md`, `docs/<TAG>_SETUP.md`, `docs/<TAG>_USER_GUIDE.md`, `docs/<TAG>_AUTOMATION.md` (no bare device `README.md` / `docs/SETUP.md`; no parallel `PROJECT_KNOWLEDGE` / `*AUTOSETUP*` stubs)
 - [ ] SETUP / USER_GUIDE / AUTOMATION path-correct; SETUP/AUTOMATION free of real usernames
-- [ ] `<TAG>_HANDOFF.md` present with durable device facts
+- [ ] `<TAG>_HANDOFF.md` present with durable device facts **and** any diagnosis notes agents need (single agent entry point)
 - [ ] `<TAG>_HANDOFF.md` has **Smoke test**, **Undo**, and **Before you delete the backup** sections; old-path redirect stubs removed after verification
 - [ ] `machines/<HOSTNAME>_HANDOFF.md` present (gitignored) with git identity
 - [ ] Guided verification done
@@ -340,4 +346,4 @@ Expect `ping_ok`. Confirm robot **name / IP** against `devices/Flex_Lab/FLEX_HAN
 
 ## Maintenance
 
-Update **this** file when the shared pattern changes (including machine-handoff, privacy, or **tagged doc naming** rules). Keep Flex `docs/FLEX_SETUP.md` / `docs/FLEX_AUTOMATION.md` as the reference implementation for generic wording.
+Update **this** file when the shared pattern changes (including machine-handoff, privacy, GitHub/public-share, or **tagged doc naming** rules). Keep Flex `docs/FLEX_SETUP.md` / `docs/FLEX_AUTOMATION.md` as the reference implementation for generic wording.

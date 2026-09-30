@@ -21,7 +21,9 @@ Filename convention: device handoffs are `<TAG>_HANDOFF.md` (this file = `H1_HAN
 
 ## Last updated
 
-2026-09-30 — Renamed everyday docs to tagged names (`H1_README.md`, `docs/H1_SETUP.md`, `docs/H1_USER_GUIDE.md`, `docs/H1_AUTOMATION.md`); no bare README stub. — Jesse Martin (via agent) on WS-RHCV7HYY6K
+2026-09-30 — Consistency pass before GitHub-share prep: README handoff blurb aligned; pending commit item closed. — Jesse Martin (via agent) on WS-RHCV7HYY6K
+
+Earlier 2026-09-30 — Renamed everyday docs to tagged names (`H1_README.md`, `docs/H1_SETUP.md`, `docs/H1_USER_GUIDE.md`, `docs/H1_AUTOMATION.md`); no bare README stub. — Jesse Martin (via agent) on WS-RHCV7HYY6K
 
 Earlier 2026-09-30 — Renamed `HANDOFF.md` → `H1_HANDOFF.md` per PyControl naming convention (Flex alignment pass). Old `~/Documents/H1_Lab` renamed to `~/Documents/H1_Lab_backup_20260929`; references repointed. **H1 migration complete.** Longevity pass: removed `PAI_Lab` H1 redirect stubs; replaced real usernames with `~` / `<username>`; standardized undo steps; added backup-deletion checklist and smoke test. Adopted Flex privacy norm (handoffs keep real facts + attribution; no secrets). — Jesse Martin (via agent) on WS-RHCV7HYY6K
 
@@ -64,8 +66,9 @@ Multi-device hub/gateway (lives in `PAI_Lab`), public-internet control, research
 | Done | Real usernames removed from H1/PyControl/PAI_Lab/backup text docs (`~` / `<username>` convention) |
 | Done | Smoke test / Undo / Before-you-delete-backup generalized into `ALIGNMENT_HANDOFF.md` (rule + done-checklist item) and `templates/DEVICE_HANDOFF.md` (blank sections); this file is the reference example |
 | Done | Smoke test steps 1–4 passed after the 2026-09-30 cleanup (discover, status, open, close) — Jesse Martin on WS-RHCV7HYY6K |
-| Pending | Commit 2026-09-30 H1/Flex/shared-doc edits — user chose to have the MiR alignment chat commit everything once MiR verifies (avoid concurrent-edit conflicts) |
-| Pending | GUI smoke from new path (optional; worked pre-migration) |
+| Done | GUI smoke from new path: Status, Open tray, Close tray (2026-09-30) — Jesse Martin on WS-RHCV7HYY6K |
+| Done | Doc naming / redundancy cleanup committed with PyControl shared-doc pass (2026-09-30) |
+| Pending | Absorbance read from new path (CLI or GUI) → first files in `results/` (optional; worked pre-migration) |
 | Pending | Windows / Linux hardware verification |
 | Deferred | `pai_signal` emit from CLI/GUI ("demo contract") |
 
