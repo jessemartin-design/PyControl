@@ -54,6 +54,7 @@ Multi-device hub/gateway (lives in `PAI_Lab`), public-internet control, installe
 | Done | Smoke step 3: user confirmed `Status` OK from new path (2026-09-30) |
 | Done | GUI opens from new path (user-verified 2026-09-30; not every command exercised) |
 | Done | Desktop → `~/Desktop/MiR_API_backup_20260930` (on WS-RHCV7HYY6K); nothing deleted |
+| Done | Git commit `1ec3a4f` (MiR_API package + root/Flex status notes) |
 | Pending | Broader CLI/GUI command coverage from new path |
 | Pending | Optional smoke step 4 (motion) — only if user asks |
 | Deferred | Delete Desktop backup — keep until more commands verified + explicit yes |
