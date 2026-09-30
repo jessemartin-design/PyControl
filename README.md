@@ -21,15 +21,23 @@ PyControl/
 | Mac / Linux | `~/PyControl` (or path in `machines/<HOSTNAME>_HANDOFF.md`) |
 | Windows | `%USERPROFILE%\PyControl` |
 
-Sharing is by **zip / USB**. Exclude each device’s `.venv` and do not rely on gitignored `machines/*_HANDOFF.md` files traveling with the zip (recipients create their own machine handoff during setup).
+Sharing is by **zip / USB**, built from git so only committed files ship (no `.venv`, local `config.json`, results, or `machines/*_HANDOFF.md`). Commit first, then from this folder:
+
+```bash
+git archive --format=zip --prefix=PyControl/ -o ../PyControl_YYYYMMDD.zip HEAD
+```
+
+Don't use Finder “Compress” or Explorer “Compressed folder” — they include personal and machine-specific files. Details: `ALIGNMENT_HANDOFF.md` → **Sharing / zip**. Recipients create their own machine handoff during setup.
+
+Device handoffs (`*_HANDOFF.md`) do ship: they record real device facts and who did what, so share the zip with lab teammates only.
 
 ## Devices
 
 | Folder | Device | Status |
 | --- | --- | --- |
-| `devices/Flex_Lab` | Opentrons Flex | Active — `docs/` + `FLEX_HANDOFF.md` |
-| `devices/MiR_API` | MiR robot API | Placeholder — migrate via Alignment |
-| `devices/H1_Lab` | Biotek Synergy H1 (USB) | Active — `docs/` + `H1_HANDOFF.md` |
+| `devices/Flex_Lab` | Opentrons Flex | Active — `FLEX_README.md`, tagged `docs/FLEX_*.md`, `FLEX_HANDOFF.md` |
+| `devices/MiR_API` | MiR robot API | Active — `MIR_README.md`, tagged `docs/MIR_*.md`, `MIR_HANDOFF.md` (Desktop copy pending rename after smoke test) |
+| `devices/H1_Lab` | Biotek Synergy H1 (USB) | Active — `H1_README.md`, tagged `docs/H1_*.md`, `H1_HANDOFF.md` |
 
 ## New computer (after you have a zip)
 
@@ -40,4 +48,4 @@ Sharing is by **zip / USB**. Exclude each device’s `.venv` and do not rely on 
 
 ## Aligning another device
 
-Upload **`ALIGNMENT_HANDOFF.md`** into that chat. Agents should: migrate into this tree, use `<TAG>_HANDOFF.md`, scrub usernames from SETUP/AUTOMATION only, preserve accurate device-handoff history, and ensure a machine handoff exists.
+Upload **`ALIGNMENT_HANDOFF.md`** into that chat. Agents should: migrate into this tree, use tagged device docs (`<TAG>_README.md`, `docs/<TAG>_SETUP.md`, …) and `<TAG>_HANDOFF.md`, scrub usernames from SETUP/AUTOMATION only, preserve accurate device-handoff history, and ensure a machine handoff exists.

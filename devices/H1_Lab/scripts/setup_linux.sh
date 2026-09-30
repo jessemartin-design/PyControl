@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Idempotent H1_Lab setup for Linux.
 # Safe to re-run. Resolves paths from this script's location (zip/USB friendly).
-# Not yet verified on Linux hardware — see docs/SETUP.md troubleshooting.
+# Not yet verified on Linux hardware — see docs/H1_SETUP.md troubleshooting.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -117,5 +117,5 @@ if python h1_control.py status; then
   echo "SETUP OK"
   exit 0
 fi
-echo "SETUP INCOMPLETE: status failed. Check H1 power + USB cable, USB permissions (udev rule, see docs/SETUP.md), and ftdi_device_id in config.json."
+echo "SETUP INCOMPLETE: status failed. Check H1 power + USB cable, USB permissions (udev rule, see docs/H1_SETUP.md), and ftdi_device_id in config.json."
 exit 1

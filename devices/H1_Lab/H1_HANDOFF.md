@@ -15,13 +15,15 @@ Filename convention: device handoffs are `<TAG>_HANDOFF.md` (this file = `H1_HAN
 4. Do not delete durable facts unless proven wrong — replace with a dated correction.
 5. Set **Last updated** to today when you change Progress or Durable details.
 6. Secrets stay in local config / env — not here.
-7. If docs/scripts/CLI behavior change, also update `docs/SETUP.md`, `docs/USER_GUIDE.md`, `docs/AUTOMATION.md`, and repo-root [`ALIGNMENT_HANDOFF.md`](../../ALIGNMENT_HANDOFF.md) if the shared pattern changed.
+7. If docs/scripts/CLI behavior change, also update `H1_README.md`, `docs/H1_SETUP.md`, `docs/H1_USER_GUIDE.md`, `docs/H1_AUTOMATION.md`, and repo-root [`ALIGNMENT_HANDOFF.md`](../../ALIGNMENT_HANDOFF.md) if the shared pattern changed.
 
 ---
 
 ## Last updated
 
-2026-09-30 — Renamed `HANDOFF.md` → `H1_HANDOFF.md` per PyControl naming convention (Flex alignment pass). Old `~/Documents/H1_Lab` renamed to `~/Documents/H1_Lab_backup_20260929`; references repointed. **H1 migration complete.** Longevity pass: removed `PAI_Lab` H1 redirect stubs; replaced real usernames with `~` / `<username>`; standardized undo steps; added backup-deletion checklist and smoke test.
+2026-09-30 — Renamed everyday docs to tagged names (`H1_README.md`, `docs/H1_SETUP.md`, `docs/H1_USER_GUIDE.md`, `docs/H1_AUTOMATION.md`); no bare README stub. — Jesse Martin (via agent) on WS-RHCV7HYY6K
+
+Earlier 2026-09-30 — Renamed `HANDOFF.md` → `H1_HANDOFF.md` per PyControl naming convention (Flex alignment pass). Old `~/Documents/H1_Lab` renamed to `~/Documents/H1_Lab_backup_20260929`; references repointed. **H1 migration complete.** Longevity pass: removed `PAI_Lab` H1 redirect stubs; replaced real usernames with `~` / `<username>`; standardized undo steps; added backup-deletion checklist and smoke test. Adopted Flex privacy norm (handoffs keep real facts + attribution; no secrets). — Jesse Martin (via agent) on WS-RHCV7HYY6K
 
 ---
 
@@ -49,7 +51,7 @@ Multi-device hub/gateway (lives in `PAI_Lab`), public-internet control, research
 | Done | `discover` command (`--set-device-id`, `--save`) |
 | Done | GUI picks `.venv` Python on Windows (`Scripts\python.exe`) |
 | Done | `scripts/setup_mac.sh`, `setup_linux.sh`, `setup_windows.ps1` |
-| Done | `docs/SETUP.md`, `USER_GUIDE.md`, `AUTOMATION.md` |
+| Done | `docs/H1_SETUP.md`, `docs/H1_USER_GUIDE.md`, `docs/H1_AUTOMATION.md`, `H1_README.md` (tagged names) |
 | Done | User ran `setup_mac.sh` → `SETUP OK` (`status` from new path) |
 | Done | Repointed `PAI_Lab` stubs/docs, `MiR_API/docs/PROJECT_KNOWLEDGE.md`, PyControl README, Flex HANDOFF |
 | Done | Git ignore verified: `config.json` and `.venv` excluded (`git check-ignore`) |
@@ -60,7 +62,9 @@ Multi-device hub/gateway (lives in `PAI_Lab`), public-internet control, research
 | Done | Cursor workspace for this work moved to `~/Documents/PyControl` |
 | Done | Deleted `PAI_Lab` redirect stubs (`h1_control.py`, `h1_gui.py`, `h1_absorbance_test.py`, `PAI_Lab_Cursor_PyLabRobot_Handoff_concise_v3.md`) — 2026-09-30 |
 | Done | Real usernames removed from H1/PyControl/PAI_Lab/backup text docs (`~` / `<username>` convention) |
-| Pending | User re-runs **Smoke test** below after the 2026-09-30 cleanup |
+| Done | Smoke test / Undo / Before-you-delete-backup generalized into `ALIGNMENT_HANDOFF.md` (rule + done-checklist item) and `templates/DEVICE_HANDOFF.md` (blank sections); this file is the reference example |
+| Done | Smoke test steps 1–4 passed after the 2026-09-30 cleanup (discover, status, open, close) — Jesse Martin on WS-RHCV7HYY6K |
+| Pending | Commit 2026-09-30 H1/Flex/shared-doc edits — user chose to have the MiR alignment chat commit everything once MiR verifies (avoid concurrent-edit conflicts) |
 | Pending | GUI smoke from new path (optional; worked pre-migration) |
 | Pending | Windows / Linux hardware verification |
 | Deferred | `pai_signal` emit from CLI/GUI ("demo contract") |
@@ -159,10 +163,12 @@ Control from: the always-on USB computer; same LAN via RDP into it; remote colle
 | Date | Change |
 | --- | --- |
 | 2026-09-14 | H1 code/docs split out of `PAI_Lab` into `~/Documents/H1_Lab`; schema prefix `pai_lab.h1.*` → `h1_lab.*` |
-| 2026-09-29 | Copied into `PyControl/devices/H1_Lab`; `.env` → `config.json`; outputs → `results/`; `requests` dropped from requirements; old docs replaced by `docs/SETUP.md` / `USER_GUIDE.md` / `AUTOMATION.md` |
+| 2026-09-29 | Copied into `PyControl/devices/H1_Lab`; `.env` → `config.json`; outputs → `results/`; `requests` dropped from requirements; old docs replaced by `docs/H1_SETUP.md` / `H1_USER_GUIDE.md` / `H1_AUTOMATION.md` |
 | 2026-09-30 | `HANDOFF.md` → `H1_HANDOFF.md` |
-| 2026-09-30 | Old `~/Documents/H1_Lab` → `~/Documents/H1_Lab_backup_20260929` |
+| 2026-09-30 | Old `~/Documents/H1_Lab` → `~/Documents/H1_Lab_backup_20260929` (on WS-RHCV7HYY6K) |
 | 2026-09-30 | `PAI_Lab` H1 redirect stubs deleted; usernames → `~` / `<username>` in docs |
+
+All migration rows above: Jesse Martin (via agent) on WS-RHCV7HYY6K.
 
 Not copied (only in `~/Documents/H1_Lab_backup_20260929`): `.docx` guides, `h1_absorbance_test.py`, old result files, `H1_autosetup.md`, old handoff.
 
@@ -176,7 +182,7 @@ Not copied (only in `~/Documents/H1_Lab_backup_20260929`): `.docx` guides, `h1_a
 
 ### Undo (return to the pre-migration project)
 
-Backup convention: a retired copy is renamed `<Folder>_backup_<YYYYMMDD>` in the same parent folder (here `~/Documents/H1_Lab_backup_20260929`).
+Backup convention: a retired copy is renamed `<Folder>_backup_<YYYYMMDD>` in the same parent folder (here `~/Documents/H1_Lab_backup_20260929`, **on WS-RHCV7HYY6K only** — it is not in the zip; on other computers Undo = git history).
 
 1. Rename `~/Documents/H1_Lab_backup_20260929` back to `~/Documents/H1_Lab` (its `.venv` only works at that path).
 2. `cd ~/Documents/H1_Lab && .venv/bin/python3 h1_control.py status` (reads its `.env`). If it fails, delete its `.venv` and recreate: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`, then re-add the Mac `DYLD_LIBRARY_PATH` line.
@@ -204,7 +210,7 @@ Do these in order; stop and ask the user if any step fails.
 | Device folder | Handoff file | Status |
 | --- | --- | --- |
 | `Flex_Lab` | `FLEX_HANDOFF.md` | Active (PyControl) |
-| `MiR_API` | `MIR_HANDOFF.md` (when migrated) | Do not modify for H1 work |
+| `MiR_API` | `MIR_HANDOFF.md` | Active in PyControl (Desktop copy pending rename after smoke test) |
 | `PAI_Lab` | (hub — separate) | `~/Documents/PAI_Lab` |
 
 ---
@@ -224,7 +230,7 @@ python h1_control.py status
 - Ask before tray motion or plate reads.
 - No PyLabRobot inside `h1_gui.py`.
 - Never commit `config.json` / `.env`.
-- **No real usernames** in any file (code, docs, handoffs). Use `~/...` / `%USERPROFILE%\...`, or `<username>` when an absolute example is unavoidable (e.g. `/Users/<username>/Documents/PyControl`). Code must derive paths from its own location, never from a home folder.
+- **Privacy (per `ALIGNMENT_HANDOFF.md`):** `docs/H1_SETUP.md` / `docs/H1_AUTOMATION.md` / code contain no real usernames (`~/...`, `%USERPROFILE%\...`, `<username>`). This handoff may hold real names, serials, and accurate paths, and ships in the team zip — but **never secrets**. Attribute entries `— <operator> on <HOSTNAME>`; label one-computer paths `(on <HOSTNAME>)`. Code derives paths from its own location.
 - Don't fold hub code into this folder.
 
 ## User workflow preferences

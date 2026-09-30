@@ -71,4 +71,4 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 ## After setup
 
-See **USER_GUIDE.md**. Agents: **AUTOMATION.md**. Process: repo-root `ALIGNMENT_HANDOFF.md`.
+See **__DEVICE_TAG___USER_GUIDE.md**. Agents: **__DEVICE_TAG___AUTOMATION.md**. Process: repo-root `ALIGNMENT_HANDOFF.md`.

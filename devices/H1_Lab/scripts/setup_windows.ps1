@@ -1,6 +1,6 @@
 # Idempotent H1_Lab setup for Windows (PowerShell 5+ / PowerShell 7).
 # Safe to re-run. Resolves paths from this script's location (zip/USB friendly).
-# Not yet verified on Windows hardware — see docs/SETUP.md troubleshooting (USB driver).
+# Not yet verified on Windows hardware — see docs/H1_SETUP.md troubleshooting (USB driver).
 [CmdletBinding()]
 param(
     [switch]$NonInteractive,
@@ -96,5 +96,5 @@ if ($LASTEXITCODE -eq 0) {
     exit 0
 }
 
-Write-Host "SETUP INCOMPLETE: status failed. Check H1 power + USB cable, the USB driver (see docs/SETUP.md), and ftdi_device_id in config.json."
+Write-Host "SETUP INCOMPLETE: status failed. Check H1 power + USB cable, the USB driver (see docs/H1_SETUP.md), and ftdi_device_id in config.json."
 exit 1

@@ -1,7 +1,7 @@
 # H1_Lab — User Guide
 
 Plain instructions to control the **BioTek Synergy H1** plate reader from a terminal or a button window.  
-Setup first: **[SETUP.md](SETUP.md)**. You do not need Gen5 for these tools.
+Setup first: **[H1_SETUP.md](H1_SETUP.md)**. You do not need Gen5 for these tools.
 
 ---
 

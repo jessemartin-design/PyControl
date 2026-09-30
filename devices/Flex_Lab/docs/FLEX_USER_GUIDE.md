@@ -1,7 +1,7 @@
 # Flex_Lab — User Guide
 
 Plain instructions to start the CLI and run commands.  
-Setup first: **[SETUP.md](SETUP.md)**.
+Setup first: **[FLEX_SETUP.md](FLEX_SETUP.md)**.
 
 ---
 

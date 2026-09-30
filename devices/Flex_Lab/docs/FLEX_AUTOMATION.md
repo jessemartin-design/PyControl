@@ -58,7 +58,7 @@ Take `<FLEX_IP>` from `FLEX_HANDOFF.md` or `config.json`. Interactive setups: om
 | Gate | Agent action |
 | --- | --- |
 | Wrong / unknown Wi‑Fi | Point user to SSID in `FLEX_HANDOFF.md` |
-| Python missing | SETUP.md hints; ask before installing packages |
+| Python missing | FLEX_SETUP.md hints; ask before installing packages |
 | User denies creating PyControl | Stop; ask for path |
 | `ping` fails | Wi‑Fi + IP from handoff/config; no motion commands |
 | Machine handoff refused | Explain commits/setup memory will be painful; retry ask |
@@ -79,5 +79,5 @@ Re-run setup safely: reuse `.venv`, refresh requirements, re-apply IP, ping agai
 
 ## After success
 
-Point humans to `docs/USER_GUIDE.md` and `FLEX_HANDOFF.md`.  
+Point humans to `docs/FLEX_USER_GUIDE.md` and `FLEX_HANDOFF.md`.  
 Cross-device process: repo-root **`ALIGNMENT_HANDOFF.md`**.

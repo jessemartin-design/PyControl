@@ -1,6 +1,6 @@
 # __DEVICE_NAME__ — User Guide
 
-Setup first: **SETUP.md**.
+Setup first: **__DEVICE_TAG___SETUP.md**.
 
 ## Start a session
 

@@ -177,5 +177,5 @@ Serial lookup order: `--device-id` flag → `H1_FTDIDEVICE_ID` environment varia
 
 ## After setup
 
-See **[USER_GUIDE.md](USER_GUIDE.md)** for everyday commands.  
-Agents: see **[AUTOMATION.md](AUTOMATION.md)**.
+See **[H1_USER_GUIDE.md](H1_USER_GUIDE.md)** for everyday commands.  
+Agents: see **[H1_AUTOMATION.md](H1_AUTOMATION.md)**.

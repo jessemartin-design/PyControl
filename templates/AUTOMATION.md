@@ -9,8 +9,10 @@ Never hard-code a real OS username. Prefer `~/PyControl/devices/__DEVICE_NAME__`
 
 ## Privacy scan
 
-Fix real `/Users/<person>` paths in SETUP/AUTOMATION only.  
+Fix real `/Users/<person>` paths in `__DEVICE_TAG___SETUP.md` / `__DEVICE_TAG___AUTOMATION.md` only.  
 Do **not** scrub accurate historical paths in `__DEVICE_HANDOFF_FILE__`.
+
+When installing this template into a device folder, rename to `docs/__DEVICE_TAG___AUTOMATION.md`.
 
 ## Permission gates
 

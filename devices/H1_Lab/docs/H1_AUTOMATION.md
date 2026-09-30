@@ -52,10 +52,10 @@ Scripts print `SETUP OK` (exit 0) or `SETUP INCOMPLETE` (exit 1).
 | Gate | Agent action |
 | --- | --- |
 | H1 off / USB unplugged | Ask user to power on and plug in, wait 10 s, retry |
-| Python missing | Give OS-specific hint from SETUP.md; do not install system packages without permission |
+| Python missing | Give OS-specific hint from H1_SETUP.md; do not install system packages without permission |
 | Mac: Homebrew missing | Point to https://brew.sh; do not install without permission |
-| Linux: `libftdi1` / USB permissions | Give the `apt` and udev commands from SETUP.md; they need `sudo`, so ask |
-| Windows: `status` fails after install | Explain the Zadig/WinUSB step in SETUP.md (can affect Gen5); user or IT decides |
+| Linux: `libftdi1` / USB permissions | Give the `apt` and udev commands from H1_SETUP.md; they need `sudo`, so ask |
+| Windows: `status` fails after install | Explain the Zadig/WinUSB step in H1_SETUP.md (can affect Gen5); user or IT decides |
 | Gen5 open | Ask user to close it |
 | User denies creating `~/PyControl` | Stop; ask for existing path |
 
@@ -75,6 +75,6 @@ Re-running setup scripts is safe: reuse `.venv`, refresh requirements, keep `con
 
 ## After success
 
-Point the human to `docs/USER_GUIDE.md`.  
+Point the human to `docs/H1_USER_GUIDE.md`.  
 Device brief: **`H1_HANDOFF.md`**.  
 If aligning other devices, use the repo-root **`ALIGNMENT_HANDOFF.md`**.

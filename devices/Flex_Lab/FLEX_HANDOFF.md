@@ -14,14 +14,19 @@ Filename convention: device handoffs are `<TAG>_HANDOFF.md` (this file = `FLEX_H
 3. Keep concise; prefer bullets.
 4. Do not delete durable facts unless proven wrong — replace with a dated correction.
 5. Set **Last updated** to today when you change Progress or Durable details.
-6. Secrets stay in local config / env — not here.
-7. If docs/scripts/CLI behavior change, also update `docs/SETUP.md`, `docs/USER_GUIDE.md`, `docs/AUTOMATION.md`, and repo-root `ALIGNMENT_HANDOFF.md` if the shared pattern changed.
+6. Secrets stay in local config / env — not here. This file ships in the team zip (real names, IPs, serials OK).
+   - Attribute entries `— <operator> on <HOSTNAME>` (or `(via agent)`); label one-computer paths `(on <HOSTNAME>)`. See `ALIGNMENT_HANDOFF.md` privacy rules.
+7. If docs/scripts/CLI behavior change, also update `FLEX_README.md`, `docs/FLEX_SETUP.md`, `docs/FLEX_USER_GUIDE.md`, `docs/FLEX_AUTOMATION.md`, and repo-root `ALIGNMENT_HANDOFF.md` if the shared pattern changed.
 
 ---
 
 ## Last updated
 
-2026-09-30 — Privacy rules: SETUP/AUTOMATION/Alignment generalized; device handoff keeps durable facts; machine handoff convention added.
+2026-09-30 — Renamed everyday docs to tagged names (`FLEX_README.md`, `docs/FLEX_SETUP.md`, `docs/FLEX_USER_GUIDE.md`, `docs/FLEX_AUTOMATION.md`); no bare README stub. Alignment doc updated with the same convention. — Jesse Martin (via agent) on WS-RHCV7HYY6K
+
+Earlier 2026-09-30 — Added Smoke test / Undo / Before-you-delete-backup sections and attribution rule (from H1 chat, per updated `ALIGNMENT_HANDOFF.md`). — Jesse Martin (via agent) on WS-RHCV7HYY6K
+
+Earlier 2026-09-30 — Privacy rules: SETUP/AUTOMATION/Alignment generalized; device handoff keeps durable facts; machine handoff convention added.
 
 ---
 
@@ -44,7 +49,7 @@ Full PAI orchestration, research LIMS, installer/Docker/systemd packaging.
 | Done | Control layer `flex_control.py` + demo protocol |
 | Done | Live smoke test (historical): ping/status/deck/protocols/signals vs Chemelian |
 | Done | PyControl layout: `devices/Flex_Lab/` |
-| Done | `docs/SETUP.md`, `USER_GUIDE.md`, `AUTOMATION.md` |
+| Done | `docs/FLEX_SETUP.md`, `docs/FLEX_USER_GUIDE.md`, `docs/FLEX_AUTOMATION.md`, `FLEX_README.md` (tagged names) |
 | Done | `scripts/setup_mac.sh`, `setup_linux.sh`, `setup_windows.ps1` |
 | Done | `config.example.json` + discover/`--set-ip` |
 | Done | Re-verify `ping` after restructure (`ping_ok` / Chemelian) |
@@ -63,7 +68,7 @@ Full PAI orchestration, research LIMS, installer/Docker/systemd packaging.
 1. Fill **git identity** (and confirm hostname) in `../../machines/WS-RHCV7HYY6K_HANDOFF.md` (or rename file if Computer Name differs).
 2. Align **MiR_API** via `ALIGNMENT_HANDOFF.md` → `devices/MiR_API` + `MIR_HANDOFF.md`.
 3. Commit shareable doc changes (machine `*_HANDOFF.md` stays gitignored).
-4. After MiR verifies: zip `PyControl` for USB (exclude `.venv`; machine handoffs stay local).
+4. After MiR verifies: commit, then build the zip with `git archive` (see `ALIGNMENT_HANDOFF.md` → **Sharing / zip**); never Finder “Compress”.
 
 ---
 
@@ -117,6 +122,34 @@ cd /path/to/PyControl/devices/Flex_Lab
 source .venv/bin/activate   # Windows: .\.venv\Scripts\Activate.ps1
 python flex_control.py ping
 ```
+
+---
+
+## Smoke test (run after any change to code, paths, or setup)
+
+Run from the device folder with `.venv` active, on robot Wi‑Fi. Steps 1–2 are agent-safe; steps 3–4 need the robot; step 5 moves hardware (**ask first**).
+
+| Step | Command | Pass looks like | Moves? |
+| --- | --- | --- | --- |
+| 1. Code loads | `python -m py_compile flex_control.py && python flex_control.py --help` | No errors; usage text | No |
+| 2. Scripts parse (Mac/Linux) | `bash -n scripts/setup_mac.sh && bash -n scripts/setup_linux.sh` | No output | No |
+| 3. Robot reachable | `python flex_control.py ping` | `"event": "ping_ok"`, name `Chemelian` | No |
+| 4. Robot state | `python flex_control.py status` then `python flex_control.py protocols` | Right-mount P50; protocol list | No |
+| 5. Motion | `python flex_control.py run "Demo"` (or a `transfer`) | Run completes | **Yes** |
+
+Log the result (date + pass/fail + `— <operator> on <HOSTNAME>`) in **Progress**.
+
+## Undo
+
+No pre-migration backup folder was kept: the old `~/Documents/Flex_Lab` was moved (not copied) into `PyControl/devices/Flex_Lab` in commit `8966991`. Undo = git history:
+
+1. In PyControl, `git log -- devices/Flex_Lab` to find the commit to return to.
+2. `git checkout <commit> -- devices/Flex_Lab` (or `git revert <commit>`), then re-run the setup script.
+3. Update this handoff to say what was reverted.
+
+## Before you delete the backup
+
+Not applicable — no `Flex_Lab_backup_<YYYYMMDD>` exists. If one is created in the future, follow the checklist in `ALIGNMENT_HANDOFF.md` → **Before you delete the backup**.
 
 ---
 

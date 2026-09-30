@@ -139,6 +139,6 @@ python flex_control.py ping
 
 ## After setup
 
-See **[USER_GUIDE.md](USER_GUIDE.md)**.  
+See **[FLEX_USER_GUIDE.md](FLEX_USER_GUIDE.md)**.  
 Device facts: **[FLEX_HANDOFF.md](../FLEX_HANDOFF.md)**.  
-Agents: **[AUTOMATION.md](AUTOMATION.md)** and repo-root `ALIGNMENT_HANDOFF.md`.
+Agents: **[FLEX_AUTOMATION.md](FLEX_AUTOMATION.md)** and repo-root `ALIGNMENT_HANDOFF.md`.
