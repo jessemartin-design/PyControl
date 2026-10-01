@@ -21,7 +21,9 @@ Filename convention: device handoffs are `<TAG>_HANDOFF.md` (this file = `H1_HAN
 
 ## Last updated
 
-2026-10-01 — PAI_Lab retired as live hub sibling: point hub/out-of-scope/sibling/terms to local gitignored backup `PyControl/backups/PAI_Lab_backup_20261001/` (handoff inside). Live `~/Documents/PAI_Lab` moved to Trash. — Jesse Martin (via agent) on WS-RHCV7HYY6K
+2026-10-01 — Consolidated local backups under gitignored `PyControl/backups/` (`H1_Lab_backup_20260929` moved from Documents). — Jesse Martin (via agent) on WS-RHCV7HYY6K
+
+Earlier 2026-10-01 — PAI_Lab retired as live hub sibling: point hub/out-of-scope/sibling/terms to local gitignored backup `PyControl/backups/PAI_Lab_backup_20261001/` (handoff inside). Live `~/Documents/PAI_Lab` moved to Trash. — Jesse Martin (via agent) on WS-RHCV7HYY6K
 
 Earlier 2026-09-30 — Consistency pass before GitHub-share prep: README handoff blurb aligned; pending commit item closed. — Jesse Martin (via agent) on WS-RHCV7HYY6K
 
@@ -63,6 +65,7 @@ Multi-device hub/gateway (retired; local-only backup at `PyControl/backups/PAI_L
 | Done | Git commit `449ab4f` (H1_Lab + root README/.gitignore; Flex files left for Flex chat) |
 | Done | Device handoff renamed to `H1_HANDOFF.md` |
 | Done | Old `~/Documents/H1_Lab` renamed to `~/Documents/H1_Lab_backup_20260929` (kept as backup; nothing deleted) |
+| Done | 2026-10-01 — Moved that H1 backup into `PyControl/backups/H1_Lab_backup_20260929/` (gitignored) |
 | Done | Cursor workspace for this work moved to `~/Documents/PyControl` |
 | Done | Deleted `PAI_Lab` redirect stubs (`h1_control.py`, `h1_gui.py`, `h1_absorbance_test.py`, `PAI_Lab_Cursor_PyLabRobot_Handoff_concise_v3.md`) — 2026-09-30 |
 | Done | Real usernames removed from H1/PyControl/PAI_Lab/backup text docs (`~` / `<username>` convention) |
@@ -80,7 +83,7 @@ User decisions (2026-09-29):
 
 1. **Tray test** — yes: guided `open` → `close` from the new path (no GUI). **Passed.**
 2. **Git commit** — done as `449ab4f` after the tray test. Uncommitted Flex changes were intentionally left for the Flex chat to commit.
-3. **Old `~/Documents/H1_Lab`** — kept as backup, renamed `~/Documents/H1_Lab_backup_20260929` (matches `PAI_Lab_backup_20260908`). Only copy of `.docx` guides, `h1_absorbance_test.py`, old results. Do not delete without explicit confirmation.
+3. **Old `~/Documents/H1_Lab`** — kept as backup; now at `PyControl/backups/H1_Lab_backup_20260929/` (moved 2026-10-01). Only copy of `.docx` guides, `h1_absorbance_test.py`, old results. Do not delete without explicit confirmation.
 
 Remaining: user runs the **Smoke test** below; optional GUI smoke; Windows/Linux verification; `pai_signal` when requested. MiR_API alignment happens in its own chat (its docs still contain a real username; the MiR agent should apply the no-username rule from `ALIGNMENT_HANDOFF.md`).
 
@@ -171,11 +174,12 @@ Control from: the always-on USB computer; same LAN via RDP into it; remote colle
 | 2026-09-29 | Copied into `PyControl/devices/H1_Lab`; `.env` → `config.json`; outputs → `results/`; `requests` dropped from requirements; old docs replaced by `docs/H1_SETUP.md` / `H1_USER_GUIDE.md` / `H1_AUTOMATION.md` |
 | 2026-09-30 | `HANDOFF.md` → `H1_HANDOFF.md` |
 | 2026-09-30 | Old `~/Documents/H1_Lab` → `~/Documents/H1_Lab_backup_20260929` (on WS-RHCV7HYY6K) |
+| 2026-10-01 | That H1 backup moved to `PyControl/backups/H1_Lab_backup_20260929/` (gitignored) |
 | 2026-09-30 | `PAI_Lab` H1 redirect stubs deleted; usernames → `~` / `<username>` in docs |
 
 All migration rows above: Jesse Martin (via agent) on WS-RHCV7HYY6K.
 
-Not copied (only in `~/Documents/H1_Lab_backup_20260929`): `.docx` guides, `h1_absorbance_test.py`, old result files, `H1_autosetup.md`, old handoff.
+Not copied (only in `PyControl/backups/H1_Lab_backup_20260929/`): `.docx` guides, `h1_absorbance_test.py`, old result files, `H1_autosetup.md`, old handoff.
 
 **If something breaks after the move:**
 
@@ -187,12 +191,12 @@ Not copied (only in `~/Documents/H1_Lab_backup_20260929`): `.docx` guides, `h1_a
 
 ### Undo (return to the pre-migration project)
 
-Backup convention: a retired copy is renamed `<Folder>_backup_<YYYYMMDD>` in the same parent folder (here `~/Documents/H1_Lab_backup_20260929`, **on WS-RHCV7HYY6K only** — it is not in the zip; on other computers Undo = git history).
+Backup convention: retired copies live under gitignored `PyControl/backups/` on this Mac (here `PyControl/backups/H1_Lab_backup_20260929/`, **on WS-RHCV7HYY6K only** — not in the zip; on other computers Undo = git history).
 
-1. Rename `~/Documents/H1_Lab_backup_20260929` back to `~/Documents/H1_Lab` (its `.venv` only works at that path).
-2. `cd ~/Documents/H1_Lab && .venv/bin/python3 h1_control.py status` (reads its `.env`). If it fails, delete its `.venv` and recreate: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`, then re-add the Mac `DYLD_LIBRARY_PATH` line.
+1. Move `~/Documents/PyControl/backups/H1_Lab_backup_20260929` back to `~/Documents/H1_Lab` (its `.venv` likely needs recreate after path changes).
+2. `cd ~/Documents/H1_Lab && .venv/bin/python3 h1_control.py status` (or recreate `.venv` from `requirements.txt`, then re-add the Mac `DYLD_LIBRARY_PATH` line).
 3. Optional, to remove the new copy from history: in PyControl, `git revert 449ab4f` (plus any later H1 commits).
-4. Update this handoff and `PAI_Lab/docs/MOVE_STATUS.md` to say which copy is canonical.
+4. Update this handoff to say which copy is canonical.
 
 ### Before you delete the backup
 
@@ -204,7 +208,7 @@ Do these in order; stop and ask the user if any step fails.
    - `.docx` guides, `H1_autosetup.md`, old handoff → superseded by `docs/*.md` and this file.
    - `h1_absorbance_test.py` → superseded by `h1_control.py absorbance`.
    - Old `h1_absorbance_*` result files → copy to `results/` (or elsewhere) if the user wants them.
-3. **Find references:** `rg -n "H1_Lab_backup_20260929" ~/Documents/PyControl ~/Documents/PAI_Lab`. Update each hit to say the backup was deleted (date), and replace the **Undo** section above with "Undo no longer available locally; use git history."
+3. **Find references:** `rg -n "H1_Lab_backup_20260929" ~/Documents/PyControl`. Update each hit to say the backup was deleted (date), and replace the **Undo** section above with "Undo no longer available locally; use git history."
 4. **User confirms deletion** explicitly. Prefer moving to Trash over `rm`.
 5. **Log it** in **Progress** and the migration table.
 
@@ -215,7 +219,7 @@ Do these in order; stop and ask the user if any step fails.
 | Device folder | Handoff file | Status |
 | --- | --- | --- |
 | `Flex_Lab` | `FLEX_HANDOFF.md` | Active (PyControl) |
-| `MiR_API` | `MIR_HANDOFF.md` | Active in PyControl (Desktop copy pending rename after smoke test) |
+| `MiR_API` | `MIR_HANDOFF.md` | Active in PyControl; local backup under `backups/MiR_API_backup_20260930/` |
 | `PAI_Lab` | `PAI_Lab_Backup_Handoff.md` | Retired hub — local-only backup `PyControl/backups/PAI_Lab_backup_20261001/` (gitignored; on WS-RHCV7HYY6K) |
 
 ---

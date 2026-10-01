@@ -162,7 +162,7 @@ Every **device-owned** markdown file is prefixed with that device’s short uppe
 | Device folder | Role | Typical prior location (examples) | Handoff |
 | --- | --- | --- | --- |
 | `Flex_Lab` | Opentrons Flex | `PyControl/devices/Flex_Lab` | `FLEX_HANDOFF.md` |
-| `MiR_API` | MiR API control | `~/Desktop/MiR_API` | `MIR_HANDOFF.md` |
+| `MiR_API` | MiR API control | Was often `~/Desktop/MiR_API`; now `PyControl/devices/MiR_API` (local backup under `backups/` if present) | `MIR_HANDOFF.md`
 | `H1_Lab` | Biotek H1 | See `H1_HANDOFF.md` for backup/undo paths | `H1_HANDOFF.md` |
 
 Prefer one PyControl tree; add device folders into it.

@@ -25,7 +25,9 @@ This file is the **single agent pickup point** for MiR: status, network facts, s
 
 ## Last updated
 
-2026-10-01 — PAI_Lab retired as live hub sibling: out-of-scope hub + sibling table point to local gitignored backup `PyControl/backups/PAI_Lab_backup_20261001/`. Live `~/Documents/PAI_Lab` moved to Trash. — Jesse Martin (via agent) on WS-RHCV7HYY6K
+2026-10-01 — Consolidated Desktop MiR backup into gitignored `PyControl/backups/MiR_API_backup_20260930/`. — Jesse Martin (via agent) on WS-RHCV7HYY6K
+
+Earlier 2026-10-01 — PAI_Lab retired as live hub sibling: out-of-scope hub + sibling table point to local gitignored backup `PyControl/backups/PAI_Lab_backup_20261001/`. Live `~/Documents/PAI_Lab` moved to Trash. — Jesse Martin (via agent) on WS-RHCV7HYY6K
 
 Earlier 2026-09-30 — Consistency + GitHub-share notes in Alignment/README; ready for private-repo publish prep. — Jesse Martin (via agent) on WS-RHCV7HYY6K
 
@@ -72,6 +74,7 @@ Multi-device hub/gateway (retired; local-only backup at `PyControl/backups/PAI_L
 | Done | Smoke step 3: user confirmed `Status` OK from new path (2026-09-30) |
 | Done | GUI opens from new path (user-verified 2026-09-30; not every command exercised) |
 | Done | Desktop → `~/Desktop/MiR_API_backup_20260930` (on WS-RHCV7HYY6K); nothing deleted |
+| Done | 2026-10-01 — Moved that MiR backup into `PyControl/backups/MiR_API_backup_20260930/` (gitignored) |
 | Done | Git commit `1ec3a4f` (MiR_API package + root/Flex status notes) |
 | Pending | Broader CLI/GUI command coverage from new path |
 | Pending | Optional smoke step 4 (motion) — only if user asks |
@@ -298,15 +301,15 @@ Ask before any motion command or GUI Start.
 All migration rows above: Jesse Martin (via agent) on WS-RHCV7HYY6K.
 
 **Canonical:** `PyControl/devices/MiR_API`.  
-**Backup (do not delete yet):** `~/Desktop/MiR_API_backup_20260930` (on WS-RHCV7HYY6K).
+**Backup (do not delete yet):** `PyControl/backups/MiR_API_backup_20260930/` (on WS-RHCV7HYY6K; gitignored).
 
 ---
 
 ## Undo (return to the pre-migration copy)
 
-Backup: `~/Desktop/MiR_API_backup_20260930` (on WS-RHCV7HYY6K only — not in the zip).
+Backup: `PyControl/backups/MiR_API_backup_20260930/` (on WS-RHCV7HYY6K only — not in the zip / GitHub).
 
-1. Rename `~/Desktop/MiR_API_backup_20260930` back to `~/Desktop/MiR_API` (its `.venv` only works at that path).
+1. Move `~/Documents/PyControl/backups/MiR_API_backup_20260930` back to `~/Desktop/MiR_API` (recreate `.venv` if needed — path changes break old venvs).
 2. Run health check: `cd ~/Desktop/MiR_API && ./run_cli.sh Status` (or recreate `.venv` if needed).
 3. Optional: in PyControl, `git revert` the MiR migration commit(s).
 4. Update this handoff to say which copy is canonical.
@@ -322,7 +325,7 @@ Do these in order; stop and ask the user if any step fails.
    - Desktop `.env` → already copied into PyControl `.env` (gitignored).
    - Desktop `.venv` → rebuild via setup script at the new path (do not copy venvs).
    - Any one-off notes/images → copy if the user wants them.
-3. **Find references:** search PyControl and sibling projects for `Desktop/MiR_API` / the backup folder name; update hits. Replace **Undo** with "Undo no longer available locally; use git history" when the backup is gone.
+3. **Find references:** search PyControl for `MiR_API_backup_20260930` / Desktop MiR paths; update hits. Replace **Undo** with "Undo no longer available locally; use git history" when the backup is gone.
 4. **User confirms deletion** explicitly. Prefer moving to Trash.
 5. **Log it** in **Progress** and **Migration notes**.
 
