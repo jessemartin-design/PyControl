@@ -29,3 +29,6 @@ dist/*.zip
 # Per-computer operator / git / path facts (keep example only)
 machines/*_HANDOFF.md
 !machines/MACHINE_HANDOFF.example.md
+
+# Local tooling (gh CLI binary)
+.tools/
