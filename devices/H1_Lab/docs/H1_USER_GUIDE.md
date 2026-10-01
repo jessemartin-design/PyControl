@@ -94,7 +94,7 @@ The H1 is controlled only from the **always-on computer** that its USB cable is 
 | Another computer on the same network | **Remote Desktop (RDP)** into the always-on computer, then use the commands inside that session |
 | Another city | Same as above: RDP into the always-on computer (via VPN if IT requires) |
 
-Do not expose the H1 control computer directly to the public internet. A network gateway that lets other computers send commands without RDP is planned for the multi-device hub (`PAI_Lab`), not this folder.
+Do not expose the H1 control computer directly to the public internet. Hub / network-gateway ideas (if any) live in the local gitignored PAI_Lab backup under `PyControl/backups/`, not as an active sibling of this folder.
 
 ---
 

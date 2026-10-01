@@ -25,7 +25,9 @@ This file is the **single agent pickup point** for MiR: status, network facts, s
 
 ## Last updated
 
-2026-09-30 — Consistency + GitHub-share notes in Alignment/README; ready for private-repo publish prep. — Jesse Martin (via agent) on WS-RHCV7HYY6K
+2026-10-01 — PAI_Lab retired as live hub sibling: out-of-scope hub + sibling table point to local gitignored backup `PyControl/backups/PAI_Lab_backup_20261001/`. Live `~/Documents/PAI_Lab` moved to Trash. — Jesse Martin (via agent) on WS-RHCV7HYY6K
+
+Earlier 2026-09-30 — Consistency + GitHub-share notes in Alignment/README; ready for private-repo publish prep. — Jesse Martin (via agent) on WS-RHCV7HYY6K
 
 Earlier 2026-09-30 — Merged former `docs/PROJECT_KNOWLEDGE.md` into this handoff (one agent entry point); deleted the duplicate file. — Jesse Martin (via agent) on WS-RHCV7HYY6K
 
@@ -45,7 +47,7 @@ Reliable Python control of a MiR200 over the native REST API: CLI (`mir_command.
 
 ### Out of scope (guide only)
 
-Multi-device hub/gateway (lives in `PAI_Lab`), public-internet control, installer/Docker/systemd packaging, map embedding in the GUI (deferred).
+Multi-device hub/gateway (retired; local-only backup at `PyControl/backups/PAI_Lab_backup_20261001/` on WS-RHCV7HYY6K), public-internet control, installer/Docker/systemd packaging, map embedding in the GUI (deferred).
 
 ### Product UX (keep unless user changes it)
 
@@ -332,7 +334,7 @@ Do these in order; stop and ask the user if any step fails.
 | --- | --- | --- |
 | `Flex_Lab` | `FLEX_HANDOFF.md` | Active (PyControl) |
 | `H1_Lab` | `H1_HANDOFF.md` | Active (PyControl) |
-| `PAI_Lab` | (hub — separate) | `~/Documents/PAI_Lab` |
+| `PAI_Lab` | `PAI_Lab_Backup_Handoff.md` | Retired hub — local-only backup `PyControl/backups/PAI_Lab_backup_20261001/` (gitignored; on WS-RHCV7HYY6K) |
 
 H1 code was removed from this MiR tree on 2026-09-08; H1 demo later lived in `H1_Lab` (2026-09-14).
 

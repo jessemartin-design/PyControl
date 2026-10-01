@@ -21,7 +21,9 @@ Filename convention: device handoffs are `<TAG>_HANDOFF.md` (this file = `H1_HAN
 
 ## Last updated
 
-2026-09-30 — Consistency pass before GitHub-share prep: README handoff blurb aligned; pending commit item closed. — Jesse Martin (via agent) on WS-RHCV7HYY6K
+2026-10-01 — PAI_Lab retired as live hub sibling: point hub/out-of-scope/sibling/terms to local gitignored backup `PyControl/backups/PAI_Lab_backup_20261001/` (handoff inside). Live `~/Documents/PAI_Lab` moved to Trash. — Jesse Martin (via agent) on WS-RHCV7HYY6K
+
+Earlier 2026-09-30 — Consistency pass before GitHub-share prep: README handoff blurb aligned; pending commit item closed. — Jesse Martin (via agent) on WS-RHCV7HYY6K
 
 Earlier 2026-09-30 — Renamed everyday docs to tagged names (`H1_README.md`, `docs/H1_SETUP.md`, `docs/H1_USER_GUIDE.md`, `docs/H1_AUTOMATION.md`); no bare README stub. — Jesse Martin (via agent) on WS-RHCV7HYY6K
 
@@ -37,7 +39,7 @@ Reliable Python control layer (`h1_control.py`) + thin GUI (`h1_gui.py`) so huma
 
 ### Out of scope (guide only)
 
-Multi-device hub/gateway (lives in `PAI_Lab`), public-internet control, research assay validation, installer/Docker/systemd packaging.
+Multi-device hub/gateway (retired; local-only backup at `PyControl/backups/PAI_Lab_backup_20261001/` on WS-RHCV7HYY6K), public-internet control, research assay validation, installer/Docker/systemd packaging.
 
 ---
 
@@ -154,7 +156,7 @@ Log the result (date + pass/fail) in **Progress**.
 ### Architecture (confirmed 2026-09-14)
 
 1. **Device labs** (`H1_Lab`, `Flex_Lab`, `MiR_API`, future Mantis) — local control + thin GUI; devices don't call each other.
-2. **Hub** (`PAI_Lab`, separate folder) — future multi-device gateway / shared vocabulary.
+2. **Hub** — retired; ideas/source kept in local gitignored backup `PyControl/backups/PAI_Lab_backup_20261001/` (on WS-RHCV7HYY6K), not an active sibling.
 3. **Choreography / PAI** — calls device CLIs in sequence.
 
 Control from: the always-on USB computer; same LAN via RDP into it; remote colleague via RDP into it. Non-RDP LAN / VPN = later (hub). Never expose the instrument on the public internet.
@@ -214,7 +216,7 @@ Do these in order; stop and ask the user if any step fails.
 | --- | --- | --- |
 | `Flex_Lab` | `FLEX_HANDOFF.md` | Active (PyControl) |
 | `MiR_API` | `MIR_HANDOFF.md` | Active in PyControl (Desktop copy pending rename after smoke test) |
-| `PAI_Lab` | (hub — separate) | `~/Documents/PAI_Lab` |
+| `PAI_Lab` | `PAI_Lab_Backup_Handoff.md` | Retired hub — local-only backup `PyControl/backups/PAI_Lab_backup_20261001/` (gitignored; on WS-RHCV7HYY6K) |
 
 ---
 
@@ -257,7 +259,7 @@ python h1_control.py status
 | **H1** | Synergy H1, serial `22040106` |
 | **H1_Lab** | This device folder |
 | **PyControl** | Shared multi-device kit (`devices/*`) |
-| **PAI_Lab** | Multi-device hub sibling (separate folder) |
+| **PAI_Lab** | Retired multi-device hub; local-only backup under `PyControl/backups/PAI_Lab_backup_20261001/` |
 | **Flex_Lab / MiR_API / Mantis** | Other peripheral device labs (same doc pattern) |
 | **PAI** | The model/choreographer that will drive demos |
 | **Always-on computer** | USB station PC for the H1 |

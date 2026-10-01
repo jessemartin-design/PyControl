@@ -32,3 +32,6 @@ machines/*_HANDOFF.md
 
 # Local tooling (gh CLI binary)
 .tools/
+
+# Local-only retired project backups (never push to GitHub)
+backups/
